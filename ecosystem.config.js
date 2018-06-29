@@ -7,7 +7,7 @@ module.exports = {
     production: {
       user: 'ec2-user',
       host: 'ec2-35-177-127-109.eu-west-2.compute.amazonaws.com',
-      key: '~/.ssh/id_rsa.pub',
+      key: '~/.ssh/id_rsa.pem',
       ref: 'origin/master',
       repo: 'git@github.com:Gallmond/gallmondnet.git',
       path: '/home/ec2-user/projects/gallmondnet',
