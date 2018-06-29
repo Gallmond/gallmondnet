@@ -15,4 +15,3 @@ module.exports = {
     }
   }
 }
-/home/ec2-user/projects
