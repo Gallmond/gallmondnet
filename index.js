@@ -1,6 +1,6 @@
-if(!process.env.APP_ENVIRONMENT || process.env.APP_ENVIRONMENT=="local"){
+if(!process.env.APP_ENVIRONMENT || process.env.APP_ENVIRONMENT==="local"){
 	var fs = require('fs');
-	var envString = fs.readFileSync("./.env", {encoding:"utf-8"}); //, (err, envString)=>{
+	var envString = fs.readFileSync("./.env", {encoding:"utf-8"});
 	var splitEnv = envString.split("\r\n");
 	for(var i = 0; i<splitEnv.length; i++){
 		var eIndex = splitEnv[i].indexOf("=");
@@ -87,7 +87,6 @@ app.all('/', (req, res)=>{
 	// set response header
 	res.set('Content-Type', 'text/plain');
 	res.send(responseString);
-
 });
 
 
@@ -102,6 +101,6 @@ app.get('*', function (req, res) {
 
 // ==== start listening
 app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+  console.log('Node('+process.version+') app is running on port', app.get('port'));
 });
 
