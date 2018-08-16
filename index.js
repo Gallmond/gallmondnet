@@ -90,6 +90,10 @@ app.all('/', (req, res)=>{
 });
 
 
+app.get('/test', function (req, res) {
+	res.render('testview');
+})
+
 
 // any uncaptured ones
 app.get('*', function (req, res) {
