@@ -90,8 +90,8 @@ app.all('/', (req, res)=>{
 });
 
 
-app.get('/test', function (req, res) {
-	res.render('testview');
+app.get('/cv', function (req, res) {
+	res.render('cv');
 })
 
 
