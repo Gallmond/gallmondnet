@@ -37,7 +37,7 @@ app.use((req, res, next)=>{
 });
 
 
-app.all('/', (req, res)=>{
+app.all('/echo', (req, res)=>{
 
 	// get headers
 	var headers = req.headers;
@@ -95,8 +95,13 @@ app.get('/cv', function (req, res) {
 })
 
 
+app.get('/', function (req, res) {
+	res.set('Content-Type', 'text/plain');
+	res.send("hiya");
+})
+
 // any uncaptured ones
-app.get('*', function (req, res) {
+app.all('*', function (req, res) {
 	res.status(404).send("page not found");
 })
 // ==== routing end
