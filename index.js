@@ -94,6 +94,10 @@ app.get('/cv', function (req, res) {
 	res.render('cv');
 })
 
+app.get('/cv2', function (req, res) {
+	res.render('cv2');
+})
+
 
 app.get('/', function (req, res) {
 	res.set('Content-Type', 'text/plain');
