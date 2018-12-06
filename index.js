@@ -91,11 +91,22 @@ app.all('/echo', (req, res)=>{
 
 
 app.get('/cv', function (req, res) {
-	res.render('cv');
+	res.render('cv2');
+})
+
+app.get('/cv0', function (req, res) {
+	res.render('cv0');
 })
 
 app.get('/cv2', function (req, res) {
 	res.render('cv2');
+})
+
+app.get('/fwf_test', function (req, res) {
+	res.render('fwf_test');
+})
+app.get('/fwf_test/facebook_oauth_redirect', function (req, res) {
+	res.send("facebook_oauth_redirect");
 })
 
 
