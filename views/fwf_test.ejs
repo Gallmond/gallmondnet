@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>fwf test</title>
+
+		<link rel="stylesheet" href="/css/bootstrap.min.css" >
+		
+	</head>
+	<body>
+		<script>
+		  window.fbAsyncInit = function() {
+		    FB.init({
+		      appId            : '1483705648410949',
+		      autoLogAppEvents : true,
+		      xfbml            : true,
+		      version          : 'v3.2'
+		    });
+		  };
+
+		  (function(d, s, id){
+		     var js, fjs = d.getElementsByTagName(s)[0];
+		     if (d.getElementById(id)) {return;}
+		     js = d.createElement(s); js.id = id;
+		     js.src = "http://connect.facebook.net/en_US/sdk.js"; // WARNING THIS SHOULD BE HTTPS ON HTTPS SITE. HTTP FOR LOCALHOST TESTING ONLY
+		     fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk'));
+
+		  function checkLoginState() {
+		    FB.getLoginStatus(function(response) {
+		      statusChangeCallback(response);
+		    });
+		  }
+
+		  FB.getLoginStatus(function(response) {
+		        statusChangeCallback(response);
+		      });
+
+		  function statusChangeCallback(response) {
+		      console.log('statusChangeCallback');
+		      console.log(response);
+		      // The response object is returned with a status field that lets the
+		      // app know the current login status of the person.
+		      // Full docs on the response object can be found in the documentation
+		      // for FB.getLoginStatus().
+		      if (response.status === 'connected') {
+		        // Logged into your app and Facebook.
+		        console.log("facebook connected");
+		        console.log("info:", response)
+
+		        if(response.authResponse){
+		        	if(response.authResponse.userID){
+		        		console.log("userID is: ", response.authResponse.userID)
+		        	}
+		        }
+
+		      } else {
+		        // The person is not logged into your app or we are unable to tell.
+		        document.getElementById('status').innerHTML = 'Please log ' +
+		          'into this app.';
+		      }
+		    }
+
+		    function groupsCheck(_userid){
+		    	FB.api(
+		    	    "/"+String(_userid)+"/groups",
+		    	    function (response) {
+		    	      if (response && !response.error) {
+		    	        /* handle the result */
+		    	        console.log("goupcheck response:", response);
+
+		    	      }
+		    	    }
+		    	);
+
+		    }
+
+		</script>
+
+		<h1>test facebook login</h1>
+		<fb:login-button scope="public_profile,groups_access_member_info" onlogin="checkLoginState();">
+		</fb:login-button>
+		<div id="status">
+		</div>
+
+
+
+	<script type="text/javascript">
+		
+	</script>
+	<script src="/js/jquery-3.3.1.min.js" ></script>
+	<script src="/js/bootstrap.min.js" ></script>
+	</body>
+</html>
