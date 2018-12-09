@@ -22,7 +22,8 @@
 		     var js, fjs = d.getElementsByTagName(s)[0];
 		     if (d.getElementById(id)) {return;}
 		     js = d.createElement(s); js.id = id;
-		     js.src = "http://connect.facebook.net/en_US/sdk.js"; // WARNING THIS SHOULD BE HTTPS ON HTTPS SITE. HTTP FOR LOCALHOST TESTING ONLY
+		     var protocol = '<%= process.env.APP_ENVIRONMENT == "local" ? "http" : "https" %>';
+		     js.src = protocol+"://connect.facebook.net/en_US/sdk.js"; // WARNING THIS SHOULD BE HTTPS ON HTTPS SITE. HTTP FOR LOCALHOST TESTING ONLY
 		     fjs.parentNode.insertBefore(js, fjs);
 		   }(document, 'script', 'facebook-jssdk'));
 
@@ -50,14 +51,16 @@
 
 		        if(response.authResponse){
 		        	if(response.authResponse.userID){
+		        		sessionStorage["FBUserID"] = response.authResponse.userID;
+		        		sessionStorage["FBaccessToken"] = response.authResponse.accessToken;
 		        		console.log("userID is: ", response.authResponse.userID)
+		        		console.log("accesstoken is: ", response.authResponse.accessToken)
 		        	}
 		        }
 
 		      } else {
 		        // The person is not logged into your app or we are unable to tell.
-		        document.getElementById('status').innerHTML = 'Please log ' +
-		          'into this app.';
+		        document.getElementById('status').innerHTML = 'Please log into this app.';
 		      }
 		    }
 
@@ -82,11 +85,89 @@
 		</fb:login-button>
 		<div id="status">
 		</div>
+		<button id="check_if_fwf_member">TEST</button>
 
 
 
 	<script type="text/javascript">
-		
+		// http request
+		function autorun(){
+			console.log("autorun()");
+
+			var buttonAction = document.getElementById("check_if_fwf_member");
+			buttonAction.addEventListener("click",(e)=>{
+				console.log(e.target.id + "clicked");
+
+				e.preventDefault();
+				e.stopPropagation();
+
+				isFWFMember(sessionStorage["FBUserID"], sessionStorage["FBaccessToken"]);
+
+
+			});
+
+			function isFWFMember(_userid, _accesstoken){
+
+				var url = "<%= process.env.APP_DOMAIN %>/fwf_ajax/group_member_check";
+				var requestData = {
+					"userid":_userid,
+					"accesstoken":_accesstoken
+				}
+				ajaxJSONRequest(url, requestData, (httpobj)=>{
+
+					if(httpobj.status == 200){
+
+						console.log("httpobj.response", httpobj.response);
+						console.log("httpobj.getResponseHeader(\"Content-type\")", httpobj.getResponseHeader("Content-type"));
+
+						var jsonParse = JSON.parse(httpobj.responseText);
+						if(jsonParse){
+							var s = "UNKNOWN"
+							if(jsonParse.isfwfmember) var s = "MEMBER";
+							if(!jsonParse.isfwfmember) var s = "NOT MEMBER";
+						}
+
+						document.getElementById('status').innerHTML = "FWF Membership status: " + s;
+					}
+
+				})
+
+			}
+
+			function ajaxJSONRequest(_url, _jsonParams, _callback){
+
+				// create JSON string
+				var jsonString = JSON.stringify(_jsonParams);
+
+				var xhttp;
+				xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+
+					if(this.readyState == 0){ // UNSENT 	Client has been created. open() not called yet.
+						// console.log("UNSENT ", String(this.status));
+					}else if(this.readyState == 1){ // OPENED 	open() has been called.
+						// console.log("OPENED ", String(this.status));
+					}else if(this.readyState == 2){ // HEADERS_RECEIVED 	send() has been called, and headers and status are available.
+						// console.log("HEADERS_RECEIVED ", String(this.status));
+					}else if(this.readyState == 3){ // LOADING 	Downloading; responseText holds partial data.
+						// console.log("LOADING ", String(this.status));
+					}else if(this.readyState == 4){ // DONE 	The operation is complete
+						// console.log("DONE ", String(this.status));
+					}
+
+					if (this.readyState == 4) {
+						// console.log(this);
+						_callback(this);
+					}
+				}
+				xhttp.open("POST", _url, true);
+				xhttp.setRequestHeader("Content-type", "application/json");
+				xhttp.send( jsonString );
+			}
+		}// autorun end
+		if (document.addEventListener) document.addEventListener("DOMContentLoaded", autorun, false);
+		else if (document.attachEvent) document.attachEvent("onreadystatechange", autorun);
+		else window.onload = autorun;
 	</script>
 	<script src="/js/jquery-3.3.1.min.js" ></script>
 	<script src="/js/bootstrap.min.js" ></script>

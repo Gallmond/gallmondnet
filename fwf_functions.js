@@ -36,7 +36,7 @@ module.exports = function(){
 		});
 	}// graphGET
 
-	// passes 'groups' array into resolve
+	// passes 'groups' (array of objects) into resolve
 	this.getUserGroups = (_userId, _accessToken)=>{
 		return new Promise((resolve, reject)=>{
 			var graphsURL = "https://graph.facebook.com/" + String(_userId) + "/groups?access_token=" + String(_accessToken);
@@ -82,5 +82,32 @@ module.exports = function(){
 			})
 		});
 	}// getUserGroups
+
+	// returns 'isfwfmember' (bool) in resolve obj
+	this.isFoodWithFriendsMember = (_userId, _accessToken)=>{
+		return new Promise((resolve, reject)=>{
+
+			this.getUserGroups(_userId, _accessToken).then((obj)=>{
+				if(!obj.success) return reject(obj);
+
+				var groupsArr = obj.groups;
+				var isFWFMember = false;
+
+				for (var i = 0; i < groupsArr.length; i++) {
+					if(groupsArr[i].id === this.FWF_GROUP_ID){
+						isFWFMember = true;
+						break;
+					}
+				};
+
+				return resolve({success:true, isfwfmember:isFWFMember});
+
+
+			},(obj)=>{
+				return reject(obj);
+			})
+
+		});
+	}
 
 }
