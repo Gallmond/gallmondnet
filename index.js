@@ -10,12 +10,16 @@ if(!process.env.APP_ENVIRONMENT || process.env.APP_ENVIRONMENT==="local"){
 	}
 }
 
+console.log("process.env", process.env);
+
 // express
 express = require('express');
 app = express();
 
 // templates
 ejs = require('ejs');
+
+
 
 // FWF tools
 var FBToolsClass = require('./fwf_functions.js');
