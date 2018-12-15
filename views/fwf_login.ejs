@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>FWF Tool login</title>
+
+		<link rel="stylesheet" href="/css/bootstrap.min.css" >
+		
+	</head>
+	<body>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  var protocol = '<%= process.env.APP_ENVIRONMENT == "local" ? "http" : "https" %>';
+		  js.src = protocol + '://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.2&appId=275000753219430&autoLogAppEvents=1';
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+		<script>
+			window.fbAsyncInit = function() {
+				FB.init({
+					appId            : '1483705648410949', // gavin test id
+					autoLogAppEvents : true,
+					xfbml            : true,
+					version          : 'v3.2'
+				});
+
+				FB_tasks();
+			}
+
+
+			// only call this after init is done
+			function FB_tasks(){
+
+				FB.getLoginStatus(function(response) {
+					console.log("FB.getLoginStatus [01]");
+					statusChangeCallback(response);
+				});
+
+				// FB.login(function(response) {
+				// 	console.log("FB.login");
+				// 	if (response.status === 'connected') {
+				// 	// Logged into your app and Facebook.
+				// 		alert("LOGGED IN");
+				// 	} else {
+				// 	// The person is not logged into this app or we are unable to tell. 
+				// 		alert("UNKNOWN OR NOT LOGGED IN");
+				// 	}
+				// });
+			}
+
+			function loginButtonCallback() {
+				console.log("loginButtonCallback() start");
+				FB.getLoginStatus(function(response) {
+					console.log("FB.getLoginStatus [02]");
+					statusChangeCallback(response);
+				});
+				console.log("loginButtonCallback() end");
+			}
+
+			function statusChangeCallback(response) {
+				console.log('statusChangeCallback');
+				console.log(response);
+				// The response object is returned with a status field that lets the
+				// app know the current login status of the person.
+				// Full docs on the response object can be found in the documentation
+				// for FB.getLoginStatus().
+				if (response.status === 'connected') {
+					// Logged into your app and Facebook.
+					console.log("facebook connected");
+					console.log("info:", response)
+
+					if(response.authResponse){
+						if(response.authResponse.userID && response.authResponse.accessToken && response.authResponse.expiresIn){
+
+							// user is logged in
+						}
+					}
+
+				} else {
+					console.log("facebook NOT connected");
+					console.log("info:", response)
+				}
+			}
+
+
+
+			
+		    function ajaxJSONRequest(_url, _jsonParams, _callback){
+
+		    	// create JSON string
+		    	var jsonString = JSON.stringify(_jsonParams);
+
+		    	var xhttp;
+		    	xhttp = new XMLHttpRequest();
+		    	xhttp.onreadystatechange = function() {
+
+		    		if(this.readyState == 0){ // UNSENT 	Client has been created. open() not called yet.
+		    			// console.log("UNSENT ", String(this.status));
+		    		}else if(this.readyState == 1){ // OPENED 	open() has been called.
+		    			// console.log("OPENED ", String(this.status));
+		    		}else if(this.readyState == 2){ // HEADERS_RECEIVED 	send() has been called, and headers and status are available.
+		    			// console.log("HEADERS_RECEIVED ", String(this.status));
+		    		}else if(this.readyState == 3){ // LOADING 	Downloading; responseText holds partial data.
+		    			// console.log("LOADING ", String(this.status));
+		    		}else if(this.readyState == 4){ // DONE 	The operation is complete
+		    			// console.log("DONE ", String(this.status));
+		    		}
+
+		    		if (this.readyState == 4) {
+		    			// console.log(this);
+		    			_callback(this);
+		    		}
+		    	}
+		    	xhttp.open("POST", _url, true);
+		    	xhttp.setRequestHeader("Content-type", "application/json");
+		    	xhttp.send( jsonString );
+		    }
+
+		</script>
+
+		<h1>Log in with Facebook to access the FWF Tool</h1>
+		
+		<div id="action_container">
+			<div id="fb_login_button" class="fb-login-button" data-width="250" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" data-onlogin="loginButtonCallback()"></div>
+		<div>
+		
+
+
+
+
+	<script type="text/javascript">
+		// http request
+		function autorun(){
+			
+
+
+		}// autorun end
+		if (document.addEventListener) document.addEventListener("DOMContentLoaded", autorun, false);
+		else if (document.attachEvent) document.attachEvent("onreadystatechange", autorun);
+		else window.onload = autorun;
+	</script>
+	<script src="/js/jquery-3.3.1.min.js" ></script>
+	<script src="/js/bootstrap.min.js" ></script>
+	</body>
+</html>

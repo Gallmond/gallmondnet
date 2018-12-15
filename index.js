@@ -21,6 +21,10 @@ ejs = require('ejs');
 var FBToolsClass = require('./fwf_functions.js');
 FBTools = new FBToolsClass();
 
+// utility
+var UtilityClass = require('./utility.js');
+Util = new UtilityClass();
+
 // view engine
 app.set('view engine','ejs');
 
@@ -30,9 +34,32 @@ app.set('port', (process.env.PORT || 3000));
 // undeclared paths search the public folder
 app.use(express.static(__dirname + '/public'));
 
-// for parsing ajax
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+// ======= sessions START
+var assert = require('assert');
+session = require('express-session');
+MongoDBStore = require('connect-mongodb-session')(session);
+var store = new MongoDBStore({
+	uri: process.env.GALLMONDNET_MONGODB_URL,
+	collection: 'sessions'
+});
+store.on('error', function(error) {
+	assert.ifError(error);
+	assert.ok(false);
+});
+var sesssionOptions = {
+	secret: '9LM5HI5T',
+	cookie: {},
+	store: store,
+	resave: false,
+	saveUninitialized: false,
+	unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
+}
+if(process.env.APP_ENVIRONMENT === 'production') {
+	app.set('trust proxy', 1) // trust first proxy
+	sesssionOptions.cookie.secure = true // serve secure cookies
+}
+app.use(session(sesssionOptions));
+// ======= sessions END
 
 // set access control for testing
 app.use(function (req, res, next) {
@@ -68,6 +95,28 @@ app.use((req, res, next)=>{
    console.log("\n========== REQUEST ==========");
    console.log(String(req.method) + " " + String(req.originalUrl));
 
+});
+
+// parse body into query if not GET
+app.use((req, res, next)=>{
+
+	if(req.rawBody){
+
+		if( req.get('content-type')!="application/json" ){
+
+			var parsedJSON = JSON.parse( req.rawBody );
+			if(typeof parsedJSON === "object"){
+
+				for(paramName in parsedJSON){
+					req.query[ paramName ] = parsedJSON[ paramName ];
+				}
+
+			}
+
+		} // add more types here
+	}
+
+	next();
 });
 
 
@@ -123,6 +172,26 @@ app.all('/echo', (req, res)=>{
 	res.send(responseString);
 });
 
+app.all('/logout', (req,res)=>{
+
+	if(req.session) req.session = null; // or call req.session.destroy()
+
+	// try to get redirect
+	var redirect = false;
+	if(req.query.redirect){
+		redirect = String(req.query.redirect);
+	}
+
+
+	if(redirect != false){
+		res.redirect( redirect );
+		res.end();
+	}else{
+		res.set('Content-Type', 'text/plain');
+		res.send("logged out");
+	}
+
+});
 
 app.get('/cv', function (req, res) {
 	res.render('cv2');
@@ -136,15 +205,81 @@ app.get('/cv2', function (req, res) {
 	res.render('cv2');
 })
 
+
+// =============== FWF TOOL START  =============== 
+app.get('/fwf_tool', (req,res)=>{
+
+	/* LANDING:
+	
+	is user logged in with session?
+		YES:
+			send to fwf_logged_in if session missing or FB indicates logged out, redirect to logout.
+		NO:
+			send to fwf_login and request permissions
+	
+	*/
+
+	// is user logged in with session?
+	var isLoggedIn = false;
+	if(typeof req.session.fwf_facebook_loggedin != "undefined" && req.session.fwf_facebook_loggedin === true){
+		
+		// send to fwf_logged_in do on-page FB login check, if not logged in, redirect to logout.
+		res.render('fwf_logged_in');
+		res.end();
+
+	}else{
+
+		// send to fwf_login and request permissions
+		res.render('fwf_login');		
+		res.end();
+
+	}
+
+})// fwf_tool
+
+app.get('/fwf_login', (req,res)=>{
+	/* FWF_LOGIN
+	
+	display fwf_login page and request permissions
+	on clientside login:
+		send AJAX POST userID, accessToken, expiresIn 
+		save to session and mark as logged in
+		send to fwf_logged_in
+	*/
+
+	
+
+
+
+});
+
+
+// =============== FWF TOOL END  =============== 
+
+
+
 app.get('/fwf_test', function (req, res) {
+
+
+	// check logged in
+	var isLoggedIn = false;
+	if(typeof req.session.fwf_facebook_loggedin != "undefined" && req.session.fwf_facebook_loggedin === true){
+		isLoggedIn = true;
+	}
+
+	var pageData = {
+		"fwf_facebook_loggedin": isLoggedIn
+	}
+
+
 	res.render('fwf_test');
 })
+
 app.get('/fwf_test/facebook_oauth_redirect', function (req, res) {
 	res.send("facebook_oauth_redirect");
 })
 
 app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
-
 	console.log("routed post /fwf_ajax/:ajax_request_type", String(req.params.ajax_request_type));
 
 	// put posted json in req.params
@@ -166,8 +301,6 @@ app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
 
 	if( requestType == "group_member_check" ){
 
-		console.log("group_member_check", req.params);
-
 		// check accessToken and userid exists
 		if(!req.params.accesstoken || !req.params.userid){
 			res.set('Content-Type', 'text/plain')
@@ -176,6 +309,9 @@ app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
 		}else{
 			var accessToken = req.params.accesstoken
 			var userId = req.params.userid
+			// save to this session
+			req.session["fb_enc_accesstoken"] = Util.enc(accessToken);
+			req.session["fb_enc_userid"] = Util.enc(userId);
 		}
 
 		FBTools.isFoodWithFriendsMember(userId, accessToken).then((obj)=>{
@@ -205,6 +341,7 @@ app.get('/', function (req, res) {
 	res.set('Content-Type', 'text/plain');
 	res.send("hiya");
 })
+
 
 // any uncaptured ones
 app.all('*', function (req, res) {
