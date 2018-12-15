@@ -37,6 +37,7 @@ app.use(express.static(__dirname + '/public'));
 // ======= sessions START
 var assert = require('assert');
 session = require('express-session');
+console.log("process.env.GALLMONDNET_MONGODB_URL",process.env.GALLMONDNET_MONGODB_URL);
 MongoDBStore = require('connect-mongodb-session')(session);
 var store = new MongoDBStore({
 	uri: process.env.GALLMONDNET_MONGODB_URL,
@@ -247,7 +248,7 @@ app.get('/fwf_login', (req,res)=>{
 		send to fwf_logged_in
 	*/
 
-	
+
 
 
 
