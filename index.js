@@ -38,33 +38,33 @@ app.set('port', (process.env.PORT || 3000));
 // undeclared paths search the public folder
 app.use(express.static(__dirname + '/public'));
 
-// ======= sessions START
-var assert = require('assert');
-session = require('express-session');
-console.log("process.env.GALLMONDNET_MONGODB_URL",process.env.GALLMONDNET_MONGODB_URL);
-MongoDBStore = require('connect-mongodb-session')(session);
-var store = new MongoDBStore({
-	uri: process.env.GALLMONDNET_MONGODB_URL,
-	collection: 'sessions'
-});
-store.on('error', function(error) {
-	assert.ifError(error);
-	assert.ok(false);
-});
-var sesssionOptions = {
-	secret: '9LM5HI5T',
-	cookie: {},
-	store: store,
-	resave: false,
-	saveUninitialized: false,
-	unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
-}
-if(process.env.APP_ENVIRONMENT === 'production') {
-	app.set('trust proxy', 1) // trust first proxy
-	sesssionOptions.cookie.secure = true // serve secure cookies
-}
-app.use(session(sesssionOptions));
-// ======= sessions END
+// // ======= sessions START
+// var assert = require('assert');
+// session = require('express-session');
+// console.log("process.env.GALLMONDNET_MONGODB_URL",process.env.GALLMONDNET_MONGODB_URL);
+// MongoDBStore = require('connect-mongodb-session')(session);
+// var store = new MongoDBStore({
+// 	uri: process.env.GALLMONDNET_MONGODB_URL,
+// 	collection: 'sessions'
+// });
+// store.on('error', function(error) {
+// 	assert.ifError(error);
+// 	assert.ok(false);
+// });
+// var sesssionOptions = {
+// 	secret: '9LM5HI5T',
+// 	cookie: {},
+// 	store: store,
+// 	resave: false,
+// 	saveUninitialized: false,
+// 	unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
+// }
+// if(process.env.APP_ENVIRONMENT === 'production') {
+// 	app.set('trust proxy', 1) // trust first proxy
+// 	sesssionOptions.cookie.secure = true // serve secure cookies
+// }
+// app.use(session(sesssionOptions));
+// // ======= sessions END
 
 // set access control for testing
 app.use(function (req, res, next) {
@@ -179,22 +179,22 @@ app.all('/echo', (req, res)=>{
 
 app.all('/logout', (req,res)=>{
 
-	if(req.session) req.session = null; // or call req.session.destroy()
+	// if(req.session) req.session = null; // or call req.session.destroy()
 
-	// try to get redirect
-	var redirect = false;
-	if(req.query.redirect){
-		redirect = String(req.query.redirect);
-	}
+	// // try to get redirect
+	// var redirect = false;
+	// if(req.query.redirect){
+	// 	redirect = String(req.query.redirect);
+	// }
 
 
-	if(redirect != false){
-		res.redirect( redirect );
-		res.end();
-	}else{
-		res.set('Content-Type', 'text/plain');
-		res.send("logged out");
-	}
+	// if(redirect != false){
+	// 	res.redirect( redirect );
+	// 	res.end();
+	// }else{
+	// 	res.set('Content-Type', 'text/plain');
+	// 	res.send("logged out");
+	// }
 
 });
 
