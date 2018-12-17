@@ -11,17 +11,29 @@ module.exports = class utility{
 
 	enc(_string){
 		var algorithm = 'aes-256-ctr';
-		var cipher = this.crypto.createCipher(algorithm,process.env.ENC_KEY);
+
+		var iv = this.crypto.randomBytes(16);
+
+		console.log("iv", iv);
+
+		console.log("iv.toString()", iv.toString('utf8'));
+
+		var cipher = this.crypto.createCipheriv(algorithm,process.env.ENC_KEY, iv);
 		var crypted = cipher.update(_string,'utf8','hex')
 		crypted += cipher.final('hex');
-		return crypted;
+		return iv + ":" + crypted;
 	}
 	dec(_string){
+		if(_string.indexOf(":")==-1){ return false; }
+		var iv = _string.split(":")[0];
+		var encryptedString = _string.split(":")[1];
+
 		var algorithm = 'aes-256-ctr';
-		var decipher = this.crypto.createDecipher(algorithm,process.env.ENC_KEY);
-		var dec = decipher.update(_string,'hex','utf8')
+		var decipher = this.crypto.createDecipheriv(algorithm,process.env.ENC_KEY, iv);
+		var dec = decipher.update(encryptedString,'hex','utf8')
 		dec += decipher.final('utf8');
 		return dec;
 	}
 
 }
+

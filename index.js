@@ -320,8 +320,8 @@ app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
 		}else{
 
 			// add params to session
-			req.session["fb_enc_accesstoken"] = Util.enc(req.params.accesstoken);
-			req.session["fb_enc_userid"] = Util.enc(req.params.userid);
+			// req.session["fb_enc_accesstoken"] = Util.enc(req.params.accesstoken);
+			// req.session["fb_enc_userid"] = Util.enc(req.params.userid);
 			req.session["fb_expiresin"] = req.params.expiresin; // expiry in seconds
 			var d = new Date().valueOf();
 			req.session["fb_expiresat"] = d + (req.params.expiresin * 1000);
