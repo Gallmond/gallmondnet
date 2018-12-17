@@ -1,8 +1,9 @@
-if(!process.env.APP_ENVIRONMENT || process.env.APP_ENVIRONMENT==="local"){
+if(!process.env.APP_ENVIRONMENT || process.env.APP_ENVIRONMENT!="production"){
 	var fs = require('fs');
 	var envString = fs.readFileSync("./.env", {encoding:"utf-8"});
-	var splitEnv = envString.split("\r\n");
+	var splitEnv = envString.split("\n");
 	for(var i = 0; i<splitEnv.length; i++){
+		if(splitEnv[i].indexOf("#")===0) continue;
 		var eIndex = splitEnv[i].indexOf("=");
 		var left = splitEnv[i].substring(0,eIndex);
 		var right = splitEnv[i].substring(eIndex+1);
