@@ -103,7 +103,7 @@
 		    function isLoggedIn(){
 
 		    	// check if fwf member
-		    	var url = "<%= process.env.APP_DOMAIN %>/fwf_ajax/group_member_check";
+		    	var url = "<%= process.env.APP_DOMAIN + (process.env.APP_ENVIRONMENT==="local"?":3000":"") %>/fwf_ajax/group_member_check";
 		    	var requestData = {
 		    		"userid":sessionStorage["FBUserID"],
 		    		"accesstoken":sessionStorage["FBaccessToken"]
@@ -193,7 +193,7 @@
 
 			function isFWFMember(_userid, _accesstoken){
 
-				var url = "<%= process.env.APP_DOMAIN %>/fwf_ajax/group_member_check";
+				var url = "<%= process.env.APP_DOMAIN +(process.env.APP_ENVIRONMENT==="local"?":3000":"")%>/fwf_ajax/group_member_check";
 				var requestData = {
 					"userid":_userid,
 					"accesstoken":_accesstoken

@@ -1,17 +1,15 @@
 if(!process.env.APP_ENVIRONMENT || process.env.APP_ENVIRONMENT!="production"){
 	var fs = require('fs');
 	var envString = fs.readFileSync("./.env", {encoding:"utf-8"});
-	var splitEnv = envString.split("\n");
+	var splitEnv = envString.split("\r\n");
 	for(var i = 0; i<splitEnv.length; i++){
-		if(splitEnv[i].indexOf("#")===0) continue;
+		if(splitEnv[i].trim().indexOf("#")===0 || splitEnv[i].trim()==="") continue;
 		var eIndex = splitEnv[i].indexOf("=");
 		var left = splitEnv[i].substring(0,eIndex);
 		var right = splitEnv[i].substring(eIndex+1);
 		process.env[left] = right;
 	}
 }
-
-console.log("process.env", process.env);
 
 // express
 express = require('express');
@@ -39,33 +37,32 @@ app.set('port', (process.env.PORT || 3000));
 // undeclared paths search the public folder
 app.use(express.static(__dirname + '/public'));
 
-// // ======= sessions START
-// var assert = require('assert');
-// session = require('express-session');
-// console.log("process.env.GALLMONDNET_MONGODB_URL",process.env.GALLMONDNET_MONGODB_URL);
-// MongoDBStore = require('connect-mongodb-session')(session);
-// var store = new MongoDBStore({
-// 	uri: process.env.GALLMONDNET_MONGODB_URL,
-// 	collection: 'sessions'
-// });
-// store.on('error', function(error) {
-// 	assert.ifError(error);
-// 	assert.ok(false);
-// });
-// var sesssionOptions = {
-// 	secret: '9LM5HI5T',
-// 	cookie: {},
-// 	store: store,
-// 	resave: false,
-// 	saveUninitialized: false,
-// 	unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
-// }
-// if(process.env.APP_ENVIRONMENT === 'production') {
-// 	app.set('trust proxy', 1) // trust first proxy
-// 	sesssionOptions.cookie.secure = true // serve secure cookies
-// }
-// app.use(session(sesssionOptions));
-// // ======= sessions END
+// ======= sessions START
+var assert = require('assert');
+session = require('express-session');
+MongoDBStore = require('connect-mongodb-session')(session);
+var store = new MongoDBStore({
+	uri: process.env.GALLMONDNET_MONGODB_URL,
+	collection: 'sessions'
+});
+store.on('error', function(error) {
+	assert.ifError(error);
+	assert.ok(false);
+});
+var sesssionOptions = {
+	secret: '9LM5HI5T',
+	cookie: {},
+	store: store,
+	resave: false,
+	saveUninitialized: false,
+	unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
+}
+if(process.env.APP_ENVIRONMENT === 'production') {
+	app.set('trust proxy', 1) // trust first proxy
+	sesssionOptions.cookie.secure = true // serve secure cookies
+}
+app.use(session(sesssionOptions));
+// ======= sessions END
 
 // set access control for testing
 app.use(function (req, res, next) {
@@ -75,6 +72,7 @@ app.use(function (req, res, next) {
     if(process.env.APP_ENVIRONMENT === "local"){
 	    res.setHeader('Access-Control-Allow-Origin', '*');
     }else{
+    	console.log("process.env.APP_DOMAIN", process.env.APP_DOMAIN);
     	res.setHeader('Access-Control-Allow-Origin', String(process.env.APP_DOMAIN));
     }
     // Request methods you wish to allow
@@ -180,22 +178,17 @@ app.all('/echo', (req, res)=>{
 
 app.all('/logout', (req,res)=>{
 
-	// if(req.session) req.session = null; // or call req.session.destroy()
+	if(req.session) req.session = null; // or call req.session.destroy()
 
-	// // try to get redirect
-	// var redirect = false;
-	// if(req.query.redirect){
-	// 	redirect = String(req.query.redirect);
-	// }
-
-
-	// if(redirect != false){
-	// 	res.redirect( redirect );
-	// 	res.end();
-	// }else{
-	// 	res.set('Content-Type', 'text/plain');
-	// 	res.send("logged out");
-	// }
+	// try to get redirect
+	var redirect = false;
+	if(req.query.redirect){
+		res.redirect( String(req.query.redirect) );
+		res.end();
+	}else{
+		res.set('Content-Type', 'text/plain');
+		res.send("logged out");
+	}
 
 });
 
@@ -230,35 +223,33 @@ app.get('/fwf_tool', (req,res)=>{
 	if(typeof req.session.fwf_facebook_loggedin != "undefined" && req.session.fwf_facebook_loggedin === true){
 		
 		// send to fwf_logged_in do on-page FB login check, if not logged in, redirect to logout.
-		res.render('fwf_logged_in');
-		res.end();
+		res.set('Content-Type', 'text/plain')
+		res.status(200)
+		res.send("show page!");
+
+		// res.render('fwf_logged_in');
+		// res.end();
 
 	}else{
 
 		// send to fwf_login and request permissions
+		/* FWF_LOGIN
+		display fwf_login page and request permissions
+		on clientside:
+			is user already logged in with facebook?
+				send AJAX POST userID, accessToken, expiresIn 
+				check member of FWF?
+				save to session and mark as logged in
+				send to fwf_logged_in
+			
+
+		*/
 		res.render('fwf_login');		
 		res.end();
 
 	}
 
 })// fwf_tool
-
-app.get('/fwf_login', (req,res)=>{
-	/* FWF_LOGIN
-	
-	display fwf_login page and request permissions
-	on clientside login:
-		send AJAX POST userID, accessToken, expiresIn 
-		save to session and mark as logged in
-		send to fwf_logged_in
-	*/
-
-
-
-
-
-});
-
 
 // =============== FWF TOOL END  =============== 
 
@@ -271,6 +262,12 @@ app.get('/fwf_test', function (req, res) {
 	var isLoggedIn = false;
 	if(typeof req.session.fwf_facebook_loggedin != "undefined" && req.session.fwf_facebook_loggedin === true){
 		isLoggedIn = true;
+
+		res.set('Content-Type', 'text/plain')
+		res.status(200)
+		res.send("show page!");
+	}else{
+
 	}
 
 	var pageData = {
@@ -286,7 +283,7 @@ app.get('/fwf_test/facebook_oauth_redirect', function (req, res) {
 })
 
 app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
-	console.log("routed post /fwf_ajax/:ajax_request_type", String(req.params.ajax_request_type));
+	console.log("routed POST /fwf_ajax/:ajax_request_type", String(req.params.ajax_request_type));
 
 	// put posted json in req.params
 	var postJSON = JSON.parse(req.rawBody);
@@ -296,6 +293,7 @@ app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
 		req.params[ keys[i] ] = postJSON[ keys[i] ];
 	};
 
+	console.log("req.params:\r\n", req.params);
 
 	if(!req.params.ajax_request_type){
 		res.set('Content-Type', 'text/plain')
@@ -304,6 +302,63 @@ app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
 	}else{
 		var requestType = String(req.params.ajax_request_type).toLowerCase();
 	}
+
+
+	if( requestType === "check_member_login" ){
+
+		if( !req.params.userid || !req.params.accesstoken || !req.params.expiresin ){
+			// check required params
+			/*{
+				ajax_request_type:'check_member_login',
+				userid:'10159746616590083',
+				accesstoken:'EAAVFbCQf8UUBACNUeEbfisthRjZABF2XJfqgUAJ4ZCnUcHYGZArQjoqpn6SpLyJBGN3CCCx8xlbQmWKCj7ZBg2WklcBb6T9ZCPWm0fhE4jZCIZATNLPdIAc2JcXUwbbKOOkHUwRUZA9BqxeVphIz1OxZBB6coF3ORGlkTBAa05VyFIZB5YTM5kDUOD18EQT8hqmWeBhOfmnh8gzgZDZD',
+				expiresin:'4137'
+			}*/
+			res.set('Content-Type', 'text/plain')
+			res.status(500)
+			res.send("missing input");
+		}else{
+
+			// add params to session
+			req.session["fb_enc_accesstoken"] = Util.enc(req.params.accesstoken);
+			req.session["fb_enc_userid"] = Util.enc(req.params.userid);
+			req.session["fb_expiresin"] = req.params.expiresin; // expiry in seconds
+			var d = new Date().valueOf();
+			req.session["fb_expiresat"] = d + (req.params.expiresin * 1000);
+
+			// check if member
+			FBTools.getUserGroups(req.params.userid, req.params.accesstoken).then((obj)=>{
+				// resolve
+				var isFWFMember = false;
+				for (var i = 0; i < obj.groups.length; i++) {
+					if(String(obj.groups[i].id) === String(FBTools.FWF_GROUP_ID)){
+						isFWFMember = true;
+						break;
+					}
+				};
+
+				if(isFWFMember){
+					req.session["fwf_facebook_loggedin"] = true;
+				}
+
+				res.set('Content-Type', 'application/json')
+				res.status(200)
+				res.send( JSON.stringify({"is_fwf_member":String(isFWFMember)}) );
+
+			},(obj)=>{
+				// reject
+				res.set('Content-Type', 'application/json')
+				res.status(500)
+				res.send( JSON.stringify({"group lookup ailed":String(isFWFMember)}) );
+
+			})
+
+		}
+
+
+			
+	}
+
 
 	if( requestType == "group_member_check" ){
 
@@ -360,5 +415,6 @@ app.all('*', function (req, res) {
 // ==== start listening
 app.listen(app.get('port'), function() {
   console.log('Node('+process.version+') app is running on port', app.get('port'));
+  if(process.env.APP_ENVIRONMENT!="production") console.log("process.env:\r\n",process.env);
 });
 
