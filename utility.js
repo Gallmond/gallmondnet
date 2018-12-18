@@ -6,7 +6,7 @@ module.exports = class utility{
 		}else{
 			this.crypto = require('crypto');
 		}
-
+		this.key = Buffer.from(process.env.ENC_KEY, 'hex');
 	}
 
 	enc(_string){
@@ -14,26 +14,22 @@ module.exports = class utility{
 
 		var iv = this.crypto.randomBytes(16);
 
-		console.log("iv", iv);
-
-		console.log("iv.toString()", iv.toString('utf8'));
-
-		var cipher = this.crypto.createCipheriv(algorithm,process.env.ENC_KEY, iv);
+		var cipher = this.crypto.createCipheriv(algorithm,this.key, iv);
 		var crypted = cipher.update(_string,'utf8','hex')
 		crypted += cipher.final('hex');
-		return iv + ":" + crypted;
+		return iv.toString('hex')  + crypted;
+		// iv will be first 32 char
 	}
 	dec(_string){
-		if(_string.indexOf(":")==-1){ return false; }
-		var iv = _string.split(":")[0];
-		var encryptedString = _string.split(":")[1];
+		var iv_str = _string.substring(0,32)
+		var iv_buf = Buffer.from(iv_str, 'hex');
+		var encryptedString = _string.substring(32,_string.length);
 
 		var algorithm = 'aes-256-ctr';
-		var decipher = this.crypto.createDecipheriv(algorithm,process.env.ENC_KEY, iv);
+		var decipher = this.crypto.createDecipheriv(algorithm,this.key, iv_buf);
 		var dec = decipher.update(encryptedString,'hex','utf8')
 		dec += decipher.final('utf8');
 		return dec;
 	}
 
 }
-
