@@ -210,7 +210,7 @@ app.get('/fwf_tool', (req,res)=>{
 	*/
 
 	// is user logged in with session?
-	var isLoggedIn = false;
+	console.log("this session:", (req.session ? req.session : "RESOLVED FALSE") );
 	if(typeof req.session.fwf_facebook_loggedin != "undefined" && req.session.fwf_facebook_loggedin === true){
 		
 		// send to fwf_logged_in do on-page FB login check, if not logged in, redirect to logout.
@@ -257,6 +257,8 @@ app.get('/fwf_test', function (req, res) {
 		res.set('Content-Type', 'text/plain')
 		res.status(200)
 		res.send("show page!");
+		res.end()
+
 	}else{
 
 	}
