@@ -1,15 +1,7 @@
-if(!process.env.APP_ENVIRONMENT || process.env.APP_ENVIRONMENT!="production"){
-	var fs = require('fs');
-	var envString = fs.readFileSync("./.env", {encoding:"utf-8"});
-	var splitEnv = envString.split("\r\n");
-	for(var i = 0; i<splitEnv.length; i++){
-		if(splitEnv[i].trim().indexOf("#")===0 || splitEnv[i].trim()==="") continue;
-		var eIndex = splitEnv[i].indexOf("=");
-		var left = splitEnv[i].substring(0,eIndex);
-		var right = splitEnv[i].substring(eIndex+1);
-		process.env[left] = right;
-	}
-}
+var envFixer = require('./enviroment_fixer.js');
+envFixer.loadEnv();
+
+console.log(process.env);
 
 // express
 express = require('express');
