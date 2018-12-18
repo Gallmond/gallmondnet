@@ -1,4 +1,4 @@
-var envFixer = require('./enviroment_fixer.js');
+var envFixer = require('./environment_fixer.js');
 envFixer.loadEnv();
 
 console.log(process.env);

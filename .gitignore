@@ -1,6 +1,6 @@
 *.sublime-*
 node_modules/
 .env
-enviroment_fixer.js
+environment_fixer.js
 test.js
 notes.txt
