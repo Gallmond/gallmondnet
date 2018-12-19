@@ -50,7 +50,7 @@ var sesssionOptions = {
 }
 if(process.env.APP_ENVIRONMENT === 'production') {
 	app.set('trust proxy', 1) // trust first proxy
-	sesssionOptions.cookie.secure = true; // serve secure cookies
+	sesssionOptions.cookie.secure = false; // serve secure cookies
 }
 app.use(session(sesssionOptions));
 // ======= sessions END
@@ -64,8 +64,7 @@ app.use(function (req, res, next) {
 	    res.setHeader('Access-Control-Allow-Origin', '*');
     }else{
     	console.log("process.env.APP_DOMAIN", process.env.APP_DOMAIN);
-    	// res.setHeader('Access-Control-Allow-Origin', String(process.env.APP_DOMAIN));
-    	res.setHeader('Access-Control-Allow-Origin', '*'); // temp to test cookie problem
+    	res.setHeader('Access-Control-Allow-Origin', String(process.env.APP_DOMAIN));
     }
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
