@@ -42,7 +42,7 @@ store.on('error', function(error) {
 });
 var sesssionOptions = {
 	secret: '9LM5HI5T',
-	cookie: {},
+	cookie: {httpOnly:false},
 	store: store,
 	resave: false,
 	saveUninitialized: false,
@@ -50,7 +50,7 @@ var sesssionOptions = {
 }
 if(process.env.APP_ENVIRONMENT === 'production') {
 	app.set('trust proxy', 1) // trust first proxy
-	sesssionOptions.cookie.secure = true // serve secure cookies
+	sesssionOptions.cookie.secure = true; // serve secure cookies
 }
 app.use(session(sesssionOptions));
 // ======= sessions END
