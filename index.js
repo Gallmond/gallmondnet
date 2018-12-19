@@ -64,7 +64,8 @@ app.use(function (req, res, next) {
 	    res.setHeader('Access-Control-Allow-Origin', '*');
     }else{
     	console.log("process.env.APP_DOMAIN", process.env.APP_DOMAIN);
-    	res.setHeader('Access-Control-Allow-Origin', String(process.env.APP_DOMAIN));
+    	// res.setHeader('Access-Control-Allow-Origin', String(process.env.APP_DOMAIN));
+    	res.setHeader('Access-Control-Allow-Origin', '*'); // temp to test cookie problem
     }
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
