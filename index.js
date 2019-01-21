@@ -275,6 +275,7 @@ app.get('/fwf_test/facebook_oauth_redirect', function (req, res) {
 	res.send("facebook_oauth_redirect");
 })
 
+
 app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
 	console.log("routed POST /fwf_ajax/:ajax_request_type", String(req.params.ajax_request_type));
 
@@ -390,6 +391,10 @@ app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
 
 })
 
+app.get('/cal', function (req, res) {
+	var d = new Date().valueOf();
+	res.render('calendar_test', {d:d});
+})
 
 app.get('/', function (req, res) {
 	res.set('Content-Type', 'text/plain');
@@ -407,7 +412,10 @@ app.all('*', function (req, res) {
 
 // ==== start listening
 app.listen(app.get('port'), function() {
-  console.log('Node('+process.version+') app is running on port', app.get('port'));
+  
   if(process.env.APP_ENVIRONMENT!="production") console.log("process.env:\r\n",process.env);
+
+  console.log('Node('+process.version+') app is running on port', app.get('port'));
+
 });
 

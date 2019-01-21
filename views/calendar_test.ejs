@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <style>
+        table{
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .calcontainer{
+            border:1px solid black;
+        }
+        .calweek{
+            border:1px solid red;
+        }
+        .calday{
+            border:1px solid blue;
+            width:70px;
+        }
+    </style>
+</head>
+<body>
+    <h1>calendar for current date</h1>
+    <div class="calcontainer" id="calendar_container_1">
+    </div>
+
+    <h1>calendar for set date</h1>
+    <div class="calcontainer" id="calendar_container_2">
+    </div>
+
+    <script type="text/javascript" src="js/gavCalendar.js?d=<%= new Date().valueOf() %>"></script>
+    <script type="text/javascript">
+        function autorun()
+        {
+            var cal = new calendar("calendar_container_1");
+            var cal2 = new calendar("calendar_container_2", 1);
+
+            var passed_in_d = <%= d %>;
+            console.log("d value:", passed_in_d);
+
+        }
+        if (document.addEventListener) document.addEventListener("DOMContentLoaded", autorun, false);
+        else if (document.attachEvent) document.attachEvent("onreadystatechange", autorun);
+        else window.onload = autorun;
+    </script>
+</body>
+</html>
