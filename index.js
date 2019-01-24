@@ -1,15 +1,12 @@
 var envFixer = require('./environment_fixer.js');
 envFixer.loadEnv(); // the env files keep carrying over the wrong linebreaks and for some reason putty wont let me insert unescaped newlines
 
-
 // express
-express = require('express');
-app = express();
+var express = require('express');
+var app = express();
 
 // templates
-ejs = require('ejs');
-
-
+var ejs = require('ejs');
 
 // FWF tools
 var FBToolsClass = require('./fwf_functions.js');
@@ -29,30 +26,33 @@ app.set('port', (process.env.PORT || 3000));
 app.use(express.static(__dirname + '/public'));
 
 // ======= sessions START
-var assert = require('assert');
-session = require('express-session');
-MongoDBStore = require('connect-mongodb-session')(session);
-var store = new MongoDBStore({
-	uri: process.env.GALLMONDNET_MONGODB_URL,
-	collection: 'sessions'
-});
-store.on('error', function(error) {
-	assert.ifError(error);
-	assert.ok(false);
-});
-var sesssionOptions = {
-	secret: '9LM5HI5T',
-	cookie: {httpOnly:false},
-	store: store,
-	resave: false,
-	saveUninitialized: false,
-	unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
+var session;
+if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){
+	var assert = require('assert');
+	session = require('express-session');
+	MongoDBStore = require('connect-mongodb-session')(session);
+	var store = new MongoDBStore({
+		uri: process.env.GALLMONDNET_MONGODB_URL,
+		collection: 'sessions'
+	});
+	store.on('error', function(error) {
+		assert.ifError(error);
+		assert.ok(false);
+	});
+	var sesssionOptions = {
+		secret: '9LM5HI5T',
+		cookie: {httpOnly:false},
+		store: store,
+		resave: false,
+		saveUninitialized: false,
+		unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
+	}
+	if(process.env.APP_ENVIRONMENT === 'production') {
+		app.set('trust proxy', 1) // trust first proxy
+		sesssionOptions.cookie.secure = false; // serve secure cookies
+	}
+	app.use(session(sesssionOptions));
 }
-if(process.env.APP_ENVIRONMENT === 'production') {
-	app.set('trust proxy', 1) // trust first proxy
-	sesssionOptions.cookie.secure = false; // serve secure cookies
-}
-app.use(session(sesssionOptions));
 // ======= sessions END
 
 // set access control for testing
@@ -389,11 +389,29 @@ app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
 
 	}
 
+
+	if( requestType == "submit_available_days" ){
+		//TODO Add fwf tool function to submit this to db
+		// just overwrite their entire availabilty array with this one
+		console.log("got to submit avail days")
+		res.json({"foo":"bar","youravailabledates":req.params["availableDates"]});
+	}
+
 })
 
 app.get('/cal', function (req, res) {
-	var d = new Date().valueOf();
-	res.render('calendar_test', {d:d});
+	// some pretent values for dev
+	var pageData = {
+		"d": new Date().valueOf(),
+		"my_available_days": ["20190101","20190108","20190120","20190121"],
+		"other_people_available_days":{
+			"bob": ["20190101","20190108","20190120","20190121"],
+			"alice": ["20190107","20190114","20190116","20190117"],
+			"terry": ["20190102","20190103","20190104","20190105"],
+			"berry": ["20190102","20190103","20190104","20190105"]
+		}
+	}
+	res.render('calendar_test', pageData);
 })
 
 app.get('/', function (req, res) {
@@ -412,10 +430,6 @@ app.all('*', function (req, res) {
 
 // ==== start listening
 app.listen(app.get('port'), function() {
-  
-  if(process.env.APP_ENVIRONMENT!="production") console.log("process.env:\r\n",process.env);
-
-  console.log('Node('+process.version+') app is running on port', app.get('port'));
-
+	console.log('Node('+process.version+') app is running on port', app.get('port'));
 });
 

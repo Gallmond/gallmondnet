@@ -1,6 +1,18 @@
 module.exports = function(){
 
 	this.FWF_GROUP_ID = "757102684394117"; // from my own user group list. Also it's the one in the URL for the group itself
+	this.mongoClient = require('mongodb').MongoClient;
+	this.dbClient = false;
+
+	// connect and create client
+
+	// this.mongoClient.connect(process.env.GALLMONDNET_MONGODB_URL, { useNewUrlParser: true }, (err, client)=>{
+	// 	if(err){
+	// 			console.log("err could not connect to mongodb", err);
+	// 	}
+	// 	this.dbClient = client;
+	// });
+
 
 	this.graphGET = (_requestURL)=>{
 		return new Promise((resolve, reject)=>{
@@ -109,5 +121,48 @@ module.exports = function(){
 
 		});
 	}
+
+
+	this.setAvailabilityDays = (_userId, _availabilityDayArray)=>{
+		return new Promise((resolve, reject)=>{
+
+			var userAvailabilityCollection = this.dbClient.db("gallmondnet").collection('userAvailability');
+
+			// find record if already exists
+			var query = {"_userid":String(_userId)};
+			var newValues = {}
+			userAvailabilityCollection.updateOne(query,newValues,{"upsert":true},(err,result)=>{
+				if(err){
+					console.log("err on updateOne", err);
+					return reject({"error":true, "info":err});
+				}
+
+				console.log("result", result);
+				return resolve({"success":true, "info":result});
+
+			})
+
+		})
+	}
+
+	// returns 'availabilityDays' (array) in resolve obj
+	this.getMemberAvailabilityDays = (_userId)=>{
+		return new Promise((resolve,reject)=>{
+
+			var userAvailabilityCollection = this.dbClient.db(dbName).collection('userAvailability');
+			userAvailabilityCollection.find({"_userID":String(_userID)}).toArray((err,resultArray)=>{
+				if(err){
+					console.log("err on find", err);
+					return reject({"error":true, "info":err});
+				}
+				if(resultArray.length>1){
+					console.log("find returned array with more than one result", err);
+					return reject({"error":true, "info":resultArray.length});
+				}
+
+				return resolve({"success":true, "availabilityDays":resultArray[0].availabilityDates});
+			})
+		});
+	}// getMemberAvailabilityDays end
 
 }

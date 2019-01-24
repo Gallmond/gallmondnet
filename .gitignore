@@ -5,3 +5,4 @@ node_modules/
 environment_fixer.js
 test.js
 notes.txt
+package-lock.json

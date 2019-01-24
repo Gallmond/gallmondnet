@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/mongodb": "^3.1.19",
     "connect-mongodb-session": "^2.0.6",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
