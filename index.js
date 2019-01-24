@@ -27,7 +27,7 @@ app.use(express.static(__dirname + '/public'));
 
 // ======= sessions START
 var session;
-if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){
+if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){ //TODO Add this param to the other ENV files
 	var assert = require('assert');
 	session = require('express-session');
 	MongoDBStore = require('connect-mongodb-session')(session);
