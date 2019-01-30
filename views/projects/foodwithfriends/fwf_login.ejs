@@ -14,7 +14,7 @@
 		  if (d.getElementById(id)) return;
 		  js = d.createElement(s); js.id = id;
 		//   var protocol = '<%= process.env.APP_ENVIRONMENT == "local" ? "http" : "https" %>';
-		var protocol = <%= process.env.APP_ENVIRONMENT == "local" ? "location.protocol.substring(0, location.protocol.length-1)" : "'https'" %>
+		var protocol = <%- process.env.APP_ENVIRONMENT == "local" ? "location.protocol.substring(0, location.protocol.length-1)" : "'https'" %>
 		  js.src = protocol + '://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.2&appId=275000753219430&autoLogAppEvents=1';
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));</script>
