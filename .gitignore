@@ -1,4 +1,5 @@
 *.code-workspace
+.vscode*
 *.sublime-*
 node_modules/
 .env
@@ -6,3 +7,4 @@ environment_fixer.js
 test.js
 notes.txt
 package-lock.json
+ssl*
