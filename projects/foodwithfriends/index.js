@@ -78,7 +78,7 @@ class foodWithFriends extends baseProject{
                             res.set('Content-Type', 'application/json')
                             res.status(500)
 
-                            res.send( JSON.stringify({"group lookup ailed":String(isFWFMember)}) );
+                            res.send( JSON.stringify({"group lookup failed":String(isFWFMember)}) );
                         });
 
                     }
@@ -100,9 +100,11 @@ class foodWithFriends extends baseProject{
                 if(typeof req.session.fwf_facebook_loggedin != "undefined" && req.session.fwf_facebook_loggedin === true){
                    
                     // send to fwf_logged_in do on-page FB login check, if not logged in, redirect to logout.
-                    res.set('Content-Type', 'text/plain')
-                    res.status(200)
-                    res.send("show logged in page!");
+                    // res.set('Content-Type', 'text/plain')
+                    // res.status(200)
+                    // res.send("show logged in page!");
+
+                    this.calendar_page(req,res);
 
                 }else{
 
@@ -117,6 +119,24 @@ class foodWithFriends extends baseProject{
             }
         }
     }
+
+    // the actual calendar page
+    calendar_page(req,res){
+
+        // what data does the page need?
+        // - this users currently available days
+        // - other users currently available days
+
+
+        var pageData = {
+            "my_available_days": [],
+            "other_people_available_days":{},
+            "project_path": this.project_path
+        };
+        res.render(this.project_path+'calendar_page', pageData);
+
+    }
+
 
     // just shows the static calendar_test view and some test data, for testing the clientside js
     test_calendar_page(){

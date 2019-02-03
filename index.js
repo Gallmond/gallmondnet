@@ -55,7 +55,8 @@ if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){ //TODO Add thi
 app.use(function (req, res, next) {
     // set allowed reqwuests
     if(process.env.APP_ENVIRONMENT === "local"){
-	    res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('X-Frame-Options', 'allow-from https://www.facebook.com/');
     }else{
     	console.log("process.env.APP_DOMAIN", process.env.APP_DOMAIN);
     	res.setHeader('Access-Control-Allow-Origin', String(process.env.APP_DOMAIN));

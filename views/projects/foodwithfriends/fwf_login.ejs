@@ -7,6 +7,13 @@
 
 	<link rel="stylesheet" href="/css/bootstrap.min.css">
 
+	<style>
+		.container{
+			padding-top:50px;
+		}
+	
+	</style>
+
 </head>
 
 <body>
@@ -35,8 +42,23 @@
 		// only call this after init is done
 		function FB_tasks() {
 
+			// indicate work is happening
+			var dotAdder = setInterval(function(){
+				document.getElementById("status_check_indicator").innerHTML += ".";
+			},1000);
+			window.localStorage.setItem("dotAdder", dotAdder);
+
+			// the facebook sdk fails to run getLoginStatus when user is logged out. We'll use this timer to judge if it's failed to run
+			var probablyNotLoggedInYet = setInterval(() => {
+				// if we're still here, reveal facebook button.
+				clearInterval( window.localStorage.getItem("dotAdder", dotAdder) )
+				document.getElementById("status_check_indicator").hidden = "true";
+				document.getElementById("facebook_login_container").hidden = null;
+			}, 3000);
+
+			console.log("FB.getLoginStatus [01a]");
 			FB.getLoginStatus(function (response) {
-				console.log("FB.getLoginStatus [01]");
+				console.log("FB.getLoginStatus [01b]");
 				statusChangeCallback(response);
 			});
 
@@ -45,8 +67,9 @@
 		// this might not work in test mode. Known SDK problem
 		function loginButtonCallback() {
 			console.log("loginButtonCallback() start");
+			console.log("FB.getLoginStatus [02a]");
 			FB.getLoginStatus(function (response) {
-				console.log("FB.getLoginStatus [02]");
+				console.log("FB.getLoginStatus [02b]");
 				statusChangeCallback(response);
 			}, true); // true to prevent cache
 			console.log("loginButtonCallback() end");
@@ -102,6 +125,13 @@
 						} else {
 							// fail
 							console.log("not a member");
+							var failText = document.createElement('p');
+							failText.innerHTML = "You do not appear to be a member of Food With Friends";
+							var fbPartsNode = document.getElementById("facebook_login_container");
+							while (fbPartsNode.firstChild) {
+								fbPartsNode.removeChild(fbPartsNode.firstChild);
+							}
+							fbPartsNode.appendChild(failText);
 						}
 					}
 
@@ -151,31 +181,51 @@
 
 	</script>
 
-	<h1>Log in with Facebook to access the FWF Tool</h1>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12" style="text-align:center">
+				<h1>Log in with Facebook to access the FWF Tool</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12" style="text-align:center">
+				<p id="status_check_indicator">Checking login status</p> 
+				
+				<span id="facebook_login_container" hidden="true">
+					<div id="fb_login_button" 
+					class="fb-login-button" 
+					data-width="250" 
+					data-max-rows="1" 
+					data-size="large"
+					data-button-type="continue_with" 
+					data-show-faces="false" 
+					data-auto-logout-link="false" 
+					data-use-continue-as="false"
+					data-onlogin="loginButtonCallback()" ></div>
+					<p>
+						This is used to check you have access to the Food With Friends group. The permissions it uses allows the application to read the list of groups you're part of. No human sees the list. It just checks if FWF is present in it.
+					</p>
+				</span>
+				
+			</div>
+		</div>
+	</div>
 
-	<div id="action_container">
-		<div id="fb_login_button" class="fb-login-button" data-width="250" data-max-rows="1" data-size="large"
-		 data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"
-		 data-onlogin="loginButtonCallback()"></div>
-		<div>
 
 
 
-
-
-			<script type="text/javascript">
-				// http request
-				function autorun() {
+	<script type="text/javascript">
+		// http request
+		function autorun() {
 
 
 
-				}// autorun end
-				if (document.addEventListener) document.addEventListener("DOMContentLoaded", autorun, false);
-				else if (document.attachEvent) document.attachEvent("onreadystatechange", autorun);
-				else window.onload = autorun;
-			</script>
-			<script src="/js/jquery-3.3.1.min.js"></script>
-			<script src="/js/bootstrap.min.js"></script>
+		}// autorun end
+		if (document.addEventListener) document.addEventListener("DOMContentLoaded", autorun, false);
+		else if (document.attachEvent) document.attachEvent("onreadystatechange", autorun);
+		else window.onload = autorun;
+	</script>
+	<script src="/js/jquery-3.3.1.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
 </body>
-
 </html>
