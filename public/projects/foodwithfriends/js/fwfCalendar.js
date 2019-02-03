@@ -7,7 +7,11 @@ var calendar = function(_containerDiv, _monthOfYear = false){
     this.myLastAvailabilityDays = [];
 
 	this.createSubmitButton = ()=>{
-		var newButtonElement = document.createElement('button');
+        var newButtonElement = document.createElement('button');
+        newButtonElement.innerHTML = "Submit days";
+        newButtonElement.className = "btn btn-outline-secondary btn-block"; // for bootstrap
+        this.submitButton = newButtonElement;
+        this.addSubmitButton(newButtonElement);
 	}
 
     this.addSubmitButton = ( _buttonElement )=>{
@@ -76,7 +80,22 @@ var calendar = function(_containerDiv, _monthOfYear = false){
                     }
                 }   
             )(xhttp, this, _buttonElement);
+            xhttp.onerror = (_e)=>{
+                console.log("xhttp.onerror",_e);
+                this.submitButton.innerHTML = "request error!";
+                setTimeout(() => { 
+                    this.submitButton.innerHTML = "Submit dates";
+                }, 2000);
+            };
+            xhttp.ontimeout = (_e)=>{
+                console.log("xhttp.ontimeout",_e);
+                this.submitButton.innerHTML = "request timed out!";
+                setTimeout(() => { 
+                    this.submitButton.innerHTML = "Submit dates";
+                }, 2000);
+            };
             xhttp.open("POST", url, true);
+            xhttp.timeout = 2500; // time in milliseconds
             xhttp.withCredentials = true; // this sends cookies now
             xhttp.setRequestHeader("Content-type", "application/json");
             xhttp.send( jsonString );
@@ -174,6 +193,7 @@ var calendar = function(_containerDiv, _monthOfYear = false){
 
     // set containing div
     this.container = document.getElementById(_containerDiv);
+    this.container.className += "table-responsive"; // for bootstrap
     // create table
 	this.calTable = document.createElement("table");
 	this.calTable.className = "table table-bordered"; // for bootstrap
@@ -243,5 +263,8 @@ var calendar = function(_containerDiv, _monthOfYear = false){
 
     // add table to container
     this.container.appendChild(this.calTable);
+    this.createSubmitButton();
+    this.container.appendChild(this.submitButton);
+
 
 }

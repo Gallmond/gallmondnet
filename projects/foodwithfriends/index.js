@@ -1,4 +1,5 @@
 let baseProject = require('../baseProject.js');
+// let foodWithFriends_DB = require('./foodWithFriends_DB.js');
 
 class foodWithFriends extends baseProject{
 
@@ -83,7 +84,11 @@ class foodWithFriends extends baseProject{
 
                     }
 
-                }// end of check_member_login
+                } else if(requestType === "submit_available_days"){
+
+                    this.submitUserDates(req,res);
+
+                }
 
 
             }
@@ -167,6 +172,19 @@ class foodWithFriends extends baseProject{
         _res.send("missing input");
     }
 
+    // submits new dates and returns 200 status with json response of availableDates containing all this users dates
+    submitUserDates(_req, _res){
+        console.log("submitUserDates");
+
+        // needed params present?
+        if( !_req.session["fb_enc_userid"] || !_req.query.availableDates ){
+            this.missingInputResponse(_res);
+        }else{
+
+            // lookup user dates on mongodb
+
+        }
+    }
 
 
     // ========== FACEBOOK API LOGIC BELOW ==========
@@ -238,9 +256,6 @@ class foodWithFriends extends baseProject{
 			})
 		});
     }
-
-    // checks if userid is
-
     // ========== FACEBOOK API LOGIC ABOVE ==========
 
 
