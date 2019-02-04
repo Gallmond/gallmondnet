@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Food With Friends</title>
+    <style>
+        table{
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        /* .calcontainer{
+            border:1px solid black;
+        }
+        .calweek{
+            border:1px solid red;
+        }
+        .calday{
+            border:1px solid blue;
+            width:70px;
+        } */
+        .container{
+            padding-top: 50px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <!-- // LEFT COLUMN // -->
+            <div class="col-sm-7 leftcolumn">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2>Calendar</h2>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div id="bootstrap_calendar_container"></div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <h1> OLD BELOW </h1>
+
+    <h1>calendar for current date</h1>
+    <div class="calcontainer" id="calendar_container_1">
+    </div>
+    <button class="availability_submit_button" id="availability_submit_button_1">Submit dates</button>
+
+
+
+    <script type="text/javascript" src="<%= project_path %>js/fwfCalendar.js?d=<%= new Date().valueOf() %>"></script>
+    <script type="text/javascript">
+        function autorun() {
+            // create calendar
+            var cal = new calendar("bootstrap_calendar_container");
+            // add button
+            cal.addSubmitButton(document.getElementById("availability_submit_button_1"));
+            // add my existing dates
+            cal.loadMyAvailableDays( <% - JSON.stringify(my_available_days) %> );
+            // add other available dates
+            cal.loadFriendsAvailableDays( <% - JSON.stringify(other_people_available_days) %> );
+
+        }
+        if (document.addEventListener) document.addEventListener("DOMContentLoaded", autorun, false);
+        else if (document.attachEvent) document.attachEvent("onreadystatechange", autorun);
+        else window.onload = autorun;
+    </script>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+
+</html>

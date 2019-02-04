@@ -8,10 +8,6 @@ var app = express();
 // templates
 var ejs = require('ejs');
 
-// FWF tools
-var FBToolsClass = require('./fwf_functions.js');
-FBTools = new FBToolsClass();
-
 // utility
 var UtilityClass = require('./utility.js');
 Util = new UtilityClass();
@@ -57,11 +53,10 @@ if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){ //TODO Add thi
 
 // set access control for testing
 app.use(function (req, res, next) {
-    // Website you wish to allow to connect
-
     // set allowed reqwuests
     if(process.env.APP_ENVIRONMENT === "local"){
-	    res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('X-Frame-Options', 'allow-from https://www.facebook.com/');
     }else{
     	console.log("process.env.APP_DOMAIN", process.env.APP_DOMAIN);
     	res.setHeader('Access-Control-Allow-Origin', String(process.env.APP_DOMAIN));
@@ -73,50 +68,39 @@ app.use(function (req, res, next) {
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', true);
-
     next();
 });
 
 // grab body data and insert into req.rawBody
-app.use((req, res, next)=>{
-
-   var data = "";
-   req.on('data', (chunk)=>{ data += chunk})
-   req.on('end', ()=>{
-	   req.rawBody = data;
-	   next();
-   });
-
-   console.log("\n========== REQUEST ==========");
-   console.log(String(req.method) + " " + String(req.originalUrl));
-
+app.use((req, res, next) => {
+	var data = "";
+	req.on('data', (chunk) => { data += chunk })
+	req.on('end', () => {
+		req.rawBody = data;
+		console.log( (req.rawBody!=""? "Body: " + String(req.rawBody):"") );
+		next();
+	});
+	console.log("\n========== REQUEST ==========");
+	console.log(String(req.method) + " " + String(req.originalUrl));
 });
 
 // parse body into query if not GET
 app.use((req, res, next)=>{
-
 	if(req.rawBody){
-
-		if( req.get('content-type')!="application/json" ){
-
+		if( req.get('content-type').indexOf("application/json") != -1 ){
 			var parsedJSON = JSON.parse( req.rawBody );
 			if(typeof parsedJSON === "object"){
-
 				for(paramName in parsedJSON){
 					req.query[ paramName ] = parsedJSON[ paramName ];
 				}
-
 			}
-
-		} // add more types here
+		} //TODO add more content type parsing for post body
 	}
-
 	next();
 });
 
-
+// echo utility
 app.all('/echo', (req, res)=>{
-
 	// get headers
 	var headers = req.headers;
 	var headerKeys = Object.keys(headers);
@@ -125,8 +109,6 @@ app.all('/echo', (req, res)=>{
 		headersArr.push( String(headerKeys[i])+": "+String(headers[headerKeys[i]]) );
 	};
 	var headersString = headersArr.join("\n");
-
-
 	// get GET
 	var params = req.query;
 	var paramsKeys = Object.keys(params);
@@ -144,12 +126,8 @@ app.all('/echo', (req, res)=>{
 		}
 	};
 	var paramsString = paramsArr.join("\n");
-
-
 	// get POST
 	var bodyString = (req.rawBody===undefined?"":req.rawBody);
-
-
 	// arrange response
 	var responseArr = [
 		"// ===== headers",
@@ -160,19 +138,15 @@ app.all('/echo', (req, res)=>{
 		bodyString
 	]
 	var responseString = responseArr.join("\n");
-
-
 	// set response header
 	res.set('Content-Type', 'text/plain');
 	res.send(responseString);
 });
 
+// session killer. Use a 'redirect' param to send somewhere afterwards
 app.all('/logout', (req,res)=>{
-
 	if(req.session) req.session = null; // or call req.session.destroy()
-
 	// try to get redirect
-	var redirect = false;
 	if(req.query.redirect){
 		res.redirect( String(req.query.redirect) );
 		res.end();
@@ -180,239 +154,15 @@ app.all('/logout', (req,res)=>{
 		res.set('Content-Type', 'text/plain');
 		res.send("logged out");
 	}
-
 });
 
-app.get('/cv', function (req, res) {
-	res.render('cv2');
-})
 
-app.get('/cv0', function (req, res) {
-	res.render('cv0');
-})
+var CV_SITE_CLASS = require("./projects/cv_website");
+var CV_Site = new CV_SITE_CLASS(app);
 
-app.get('/cv2', function (req, res) {
-	res.render('cv2');
-})
+var FoodWithFriendsClass = require("./projects/foodwithfriends");
+var FoodWithFriends = new FoodWithFriendsClass(app);
 
-
-// =============== FWF TOOL START  =============== 
-app.get('/fwf_tool', (req,res)=>{
-
-	/* LANDING:
-	
-	is user logged in with session?
-		YES:
-			send to fwf_logged_in if session missing or FB indicates logged out, redirect to logout.
-		NO:
-			send to fwf_login and request permissions
-	
-	*/
-
-	// is user logged in with session?
-	console.log("this session:", (req.session ? req.session : "RESOLVED FALSE") );
-	if(typeof req.session.fwf_facebook_loggedin != "undefined" && req.session.fwf_facebook_loggedin === true){
-		
-		// send to fwf_logged_in do on-page FB login check, if not logged in, redirect to logout.
-		res.set('Content-Type', 'text/plain')
-		res.status(200)
-		res.send("show page!");
-
-		// res.render('fwf_logged_in');
-		// res.end();
-
-	}else{
-
-		// send to fwf_login and request permissions
-		/* FWF_LOGIN
-		display fwf_login page and request permissions
-		on clientside:
-			is user already logged in with facebook?
-				send AJAX POST userID, accessToken, expiresIn 
-				check member of FWF?
-				save to session and mark as logged in
-				send to fwf_logged_in
-			
-
-		*/
-		res.render('fwf_login');		
-		res.end();
-
-	}
-
-})// fwf_tool
-
-// =============== FWF TOOL END  =============== 
-
-
-
-app.get('/fwf_test', function (req, res) {
-
-
-	// check logged in
-	var isLoggedIn = false;
-	if(typeof req.session.fwf_facebook_loggedin != "undefined" && req.session.fwf_facebook_loggedin === true){
-		isLoggedIn = true;
-
-		res.set('Content-Type', 'text/plain')
-		res.status(200)
-		res.send("show page!");
-		res.end()
-
-	}else{
-
-	}
-
-	var pageData = {
-		"fwf_facebook_loggedin": isLoggedIn
-	}
-
-
-	res.render('fwf_test');
-})
-
-app.get('/fwf_test/facebook_oauth_redirect', function (req, res) {
-	res.send("facebook_oauth_redirect");
-})
-
-
-app.post('/fwf_ajax/:ajax_request_type', function (req, res) {
-	console.log("routed POST /fwf_ajax/:ajax_request_type", String(req.params.ajax_request_type));
-
-	// put posted json in req.params
-	var postJSON = JSON.parse(req.rawBody);
-	if( req.get('content-type')!="application/json" || !postJSON) res.status(400).send("check json");
-	var keys = Object.keys(postJSON);
-	for (var i = 0; i < keys.length; i++) {
-		req.params[ keys[i] ] = postJSON[ keys[i] ];
-	};
-
-	console.log("req.params:\r\n", req.params);
-
-	if(!req.params.ajax_request_type){
-		res.set('Content-Type', 'text/plain')
-		res.status(500)
-		res.send("missing input");
-	}else{
-		var requestType = String(req.params.ajax_request_type).toLowerCase();
-	}
-
-
-	if( requestType === "check_member_login" ){
-
-		if( !req.params.userid || !req.params.accesstoken || !req.params.expiresin ){
-			// check required params
-			/*{
-				ajax_request_type:'check_member_login',
-				userid:'10159746616590083',
-				accesstoken:'EAAVFbCQf8UUBACNUeEbfisthRjZABF2XJfqgUAJ4ZCnUcHYGZArQjoqpn6SpLyJBGN3CCCx8xlbQmWKCj7ZBg2WklcBb6T9ZCPWm0fhE4jZCIZATNLPdIAc2JcXUwbbKOOkHUwRUZA9BqxeVphIz1OxZBB6coF3ORGlkTBAa05VyFIZB5YTM5kDUOD18EQT8hqmWeBhOfmnh8gzgZDZD',
-				expiresin:'4137'
-			}*/
-			res.set('Content-Type', 'text/plain')
-			res.status(500)
-			res.send("missing input");
-		}else{
-
-			// add params to session
-			req.session["fb_enc_accesstoken"] = Util.enc(req.params.accesstoken);
-			req.session["fb_enc_userid"] = Util.enc(req.params.userid);
-			req.session["fb_expiresin"] = req.params.expiresin; // expiry in seconds
-			var d = new Date().valueOf();
-			req.session["fb_expiresat"] = d + (req.params.expiresin * 1000);
-
-			// check if member
-			FBTools.getUserGroups(req.params.userid, req.params.accesstoken).then((obj)=>{
-				// resolve
-				var isFWFMember = false;
-				for (var i = 0; i < obj.groups.length; i++) {
-					if(String(obj.groups[i].id) === String(FBTools.FWF_GROUP_ID)){
-						isFWFMember = true;
-						break;
-					}
-				};
-
-				if(isFWFMember){
-					req.session["fwf_facebook_loggedin"] = true;
-				}
-
-				res.set('Content-Type', 'application/json')
-				res.status(200)
-				res.send( JSON.stringify({"is_fwf_member":String(isFWFMember)}) );
-
-			},(obj)=>{
-				// reject
-				res.set('Content-Type', 'application/json')
-				res.status(500)
-				res.send( JSON.stringify({"group lookup ailed":String(isFWFMember)}) );
-
-			})
-
-		}
-
-
-			
-	}
-
-
-	if( requestType == "group_member_check" ){
-
-		// check accessToken and userid exists
-		if(!req.params.accesstoken || !req.params.userid){
-			res.set('Content-Type', 'text/plain')
-			res.status(500)
-			res.send("accessToken not set");
-		}else{
-			var accessToken = req.params.accesstoken
-			var userId = req.params.userid
-			// save to this session
-			req.session["fb_enc_accesstoken"] = Util.enc(accessToken);
-			req.session["fb_enc_userid"] = Util.enc(userId);
-		}
-
-		FBTools.isFoodWithFriendsMember(userId, accessToken).then((obj)=>{
-
-			var isFWFMember = obj.isfwfmember;
-			var responseJSON = {
-				"isfwfmember":isFWFMember,
-				"userid":userId
-			}
-			res.set('Content-Type', 'application/json')
-			res.status(200)
-			res.send( JSON.stringify(responseJSON) );
-
-		},(obj)=>{
-			console.log("isFoodWithFriendsMember rejected", obj);
-			res.set('Content-Type', 'text/plain')
-			res.status(500)
-			res.send("isFoodWithFriendsMember rejected");
-		})
-
-	}
-
-
-	if( requestType == "submit_available_days" ){
-		//TODO Add fwf tool function to submit this to db
-		// just overwrite their entire availabilty array with this one
-		console.log("got to submit avail days")
-		res.json({"foo":"bar","youravailabledates":req.params["availableDates"]});
-	}
-
-})
-
-app.get('/cal', function (req, res) {
-	// some pretent values for dev
-	var pageData = {
-		"d": new Date().valueOf(),
-		"my_available_days": ["20190101","20190108","20190120","20190121"],
-		"other_people_available_days":{
-			"bob": ["20190101","20190108","20190120","20190121"],
-			"alice": ["20190107","20190114","20190116","20190117"],
-			"terry": ["20190102","20190103","20190104","20190105"],
-			"berry": ["20190102","20190103","20190104","20190105"]
-		}
-	}
-	res.render('calendar_test', pageData);
-})
 
 app.get('/', function (req, res) {
 	res.set('Content-Type', 'text/plain');
@@ -420,16 +170,26 @@ app.get('/', function (req, res) {
 })
 
 
-// any uncaptured ones
+// 404
 app.all('*', function (req, res) {
 	res.status(404).send("page not found");
 })
-// ==== routing end
-
 
 
 // ==== start listening
 app.listen(app.get('port'), function() {
-	console.log('Node('+process.version+') app is running on port', app.get('port'));
+	console.log('Node('+process.version+') app is running http on port', app.get('port'));
 });
 
+// local https for testing
+if(process.env.APP_ENVIRONMENT == "local"){
+	var fs = require('fs');
+	var http = require('http');
+	var https = require('https');
+	var privateKey  = fs.readFileSync('ssl/local-key.pem', 'utf8');
+	var certificate = fs.readFileSync('ssl/client-cert.pem', 'utf8');
+	var credentials = {key: privateKey, cert: certificate};
+	var httpsServer = https.createServer(credentials, app);
+	httpsServer.listen(3448);
+	console.log('Node('+process.version+') app is running https on port', 3448);
+}
