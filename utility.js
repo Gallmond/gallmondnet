@@ -6,7 +6,7 @@ module.exports = class utility{
 		}else{
 			this.crypto = require('crypto');
 		}
-		this.key = Buffer.from(process.env.ENC_KEY, 'hex');
+		this.key = Buffer.from(process.env.ENC_KEY, 'hex'); // 64 char hex key
 	}
 
 	enc(_string){

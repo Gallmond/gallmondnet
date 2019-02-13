@@ -1,5 +1,5 @@
 let baseProject = require('../baseProject.js');
-// let foodWithFriends_DB = require('./foodWithFriends_DB.js');
+let foodWithFriends_DB = require('./foodWithFriends_DB.js');
 
 class foodWithFriends extends baseProject{
 
@@ -11,7 +11,7 @@ class foodWithFriends extends baseProject{
 
         // stuff specific to this project
         this.FWF_GROUP_ID = "757102684394117"; // the FoodWithFriends group ID from my own user group list. Also it's the one in the URL for the group itself.
-
+        this.database = new foodWithFriends_DB();
     }
 
     set_routes(){
@@ -182,6 +182,11 @@ class foodWithFriends extends baseProject{
         }else{
 
             // lookup user dates on mongodb
+            // this.database
+            this.database.addAvailableDays(_req.session["fb_enc_userid"], _req.query.availableDates).then((obj)=>{
+                console.log("this.database.addAvailableDays", obj);
+                _res.json({"success":true});
+            })
 
         }
     }

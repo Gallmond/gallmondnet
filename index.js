@@ -28,7 +28,7 @@ if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){ //TODO Add thi
 	session = require('express-session');
 	MongoDBStore = require('connect-mongodb-session')(session);
 	var store = new MongoDBStore({
-		uri: process.env.GALLMONDNET_MONGODB_URL,
+		uri: process.env.GALLMONDNET_MONGODB_URL + "/" + process.env.GALLMONDNET_MONGODB_DATABASENAME,
 		collection: 'sessions'
 	});
 	store.on('error', function(error) {
