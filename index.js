@@ -35,9 +35,12 @@ if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){ //TODO Add thi
 		assert.ifError(error);
 		assert.ok(false);
 	});
-	var sesssionOptions = {
+	var sessionOptions = {
 		secret: '9LM5HI5T',
-		cookie: {httpOnly:false},
+		cookie: {
+			httpOnly:false,
+			maxAge : new Date( Date.now() + (1000 * 60 * 60 * 24 * 3) )
+		},
 		store: store,
 		resave: false,
 		saveUninitialized: false,
@@ -45,9 +48,9 @@ if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){ //TODO Add thi
 	}
 	if(process.env.APP_ENVIRONMENT === 'production') {
 		app.set('trust proxy', 1) // trust first proxy
-		sesssionOptions.cookie.secure = false; // serve secure cookies
+		sessionOptions.cookie.secure = false; // serve secure cookies
 	}
-	app.use(session(sesssionOptions));
+	app.use(session(sessionOptions));
 }
 // ======= sessions END
 
