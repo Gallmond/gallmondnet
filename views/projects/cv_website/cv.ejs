@@ -310,11 +310,18 @@
 				e.preventDefault();
 				e.stopPropagation();
 				if (e.target != e.currentTarget) return;
-				e.currentTarget.disabled = true;
-				e.currentTarget.innerHTML = "Sending...";
+
 				let from = document.getElementById('contact_email_from').value;
 				let message = document.getElementById('contact_email_message').value;
 				let token = "<%- (typeof token != 'undefined'?token:'') %>";
+				
+				if(from==="" || message===""){
+					$('#email_modal').modal('hide');
+					return;
+				};
+				
+				e.currentTarget.disabled = true;
+				e.currentTarget.innerHTML = "Sending...";				
 				let postJSON = {
 					"from": String(from),
 					"message": String(message),
