@@ -1,224 +1,387 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="description" content="Professional Web Developer.">
-		<meta property="og:title" content="Gavin Allmond">
-		<meta property="og:description" content="Professional Web Developer.">
-		<meta property="og:url" content="https://gallmond.net/cv2">
 
-		<meta charset="UTF-8">
+<head>
+	<meta name="description" content="Professional Web Developer.">
+	<meta property="og:title" content="Gavin Allmond">
+	<meta property="og:description" content="Professional Web Developer.">
+	<meta property="og:url" content="https://gallmond.net/cv2">
 
-		<title>Gavin Allmond CV</title>
-		<!-- bootstrap -->
-		<link rel="stylesheet" href="/css/bootstrap.min.css" >
-		<!-- fontawesome for icons -->
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-		
-		<style type="text/css">
+	<meta charset="UTF-8">
 
-			.leftcolumn{
-				text-align: right;
-				border-right:1px solid rgba(0,0,0,.1); /* copied from hr */
-			}
+	<title>Gavin Allmond CV</title>
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<!-- fontawesome for icons -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+		integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
-			h2{
-				font-weight: 450;
-			}
+	<style type="text/css">
+		.leftcolumn {
+			text-align: right;
+			border-right: 1px solid rgba(0, 0, 0, .1);
+			/* copied from hr */
+		}
 
-			h3{
-				font-weight: 250;
-			}
+		h2 {
+			font-weight: 450;
+		}
 
+		h3 {
+			font-weight: 250;
+		}
+	</style>
 
-		</style>
+</head>
 
-	</head>
-	<body>
+<body>
 
-
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12" style="text-align:center">
-					<h1>Gavin Allmond</h1>
-					<h3>Web Developer</h3>
+	<!-- Hidden email modal -->
+	<div class="modal" tabindex="-1" role="dialog" id="email_modal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Contact</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group input-group-sm mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="inputGroup-sizing-sm">From</span>
+									</div>
+									<input id="contact_email_from" type="email" class="form-control"
+										aria-label="email address" aria-describedby="inputGroup-sizing-sm"
+										placeholder="your.email@domain.com">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+									<textarea id="contact_email_message" class="form-control" aria-label="With textarea" placeholder="Your message"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="contact_email_send" type="button" class="btn btn-primary">Send</button>
 				</div>
 			</div>
-		
-			<div class="row">
+		</div>
+	</div>
+	<!-- Hidden email modal -->
 
-				<!-- LEFT COLUMN -->
-				<div class="col-sm-4 leftcolumn">
-					
-					<!-- CONTACT -->
-					<div class="row">
-						<div class="col-sm-12">
-							<h2>Contact</h2>
-							<ul class="list-unstyled">
-								<li>gallmond.net <i class="fas fa-fw fa-globe"></i></li>
-								<li>github/gallmond <i class="fas fa-fw fa-code"></i></li>
-								<li>redacted <i class="fas fa-fw fa-mobile-alt"></i></li>
-								<li>redacted <i class="fas fa-fw fa-envelope"></i></li>
-								<li>London, SW1 <i class="fas fa-fw fa-map-marker-alt"></i></li>
-							</ul>
-						</div>
-					</div>
-					
-					<hr /><!--  DIVIDER -->
-
-					<!-- SKILLS -->
-					<div class="row">
-						<div class="col-sm-12">
-							<h2>Technical Skills</h2>
-
-							<h3>Application development</h3>
-							<ul class="list-unstyled">
-								<li>Node.js, PHP, MS JScript, ASP, Python</li>
-								<li>HTML, CSS, JavaScript</li>
-								<li>Laravel, Bootstrap, Express, EJS</li>
-								<li>MongoDB, MySQL, Redis</li>
-								<li>Version control: GIT</li>
-							</ul>
-
-							<h3>Infrastructure</h3>
-							<ul class="list-unstyled">
-								<li>AWS: EC2, Elasticache, S3, VPC</li>
-								<li>Linux: Ubuntu, Redhat, Debian</li>
-								<li>Heroku</li>
-							</ul>
-
-						</div>
-					</div>
-
-					<hr /><!--  DIVIDER -->
-
-					<!-- EDUCATION -->
-					<div class="row">
-						<div class="col-sm-12">
-							<h2>Education</h2>
-
-							<h3>BSc Business Computing</h3>
-							<p>London Metropolitan University 2011</p>
-
-							<h3>FD Degree ICT</h3>
-							<p>Northumbria University 2010</p>
-						</div>
-					</div>
-				</div>
-				<!-- LEFT COLUMN END -->
-
-				<!-- RIGHT COLUMN -->
-				<div class="col-sm-8">
-
-					<!-- BIO -->
-					<div class="row">
-						<div class="col-sm-12">
-							<h2>About</h2>
-							<p>Professional full stack developer since 2013. Web tinkerer for longer. Enjoys finding and solving problems in web app creation.</p>
-						</div>
-					</div>
-
-					<hr /><!--  DIVIDER -->
-
-					<div class="row">
-						<div class="col-sm-12">
-							<h2>Web Developer | Senior Web Developer</h2>
-							<h3>IMPULSEPAY | March 2013 - present</h3>
-							<p>Continued development and maintenance of business logic and AWS infrastructure for mobile billing web applications and merchant portals.</p>
-							<ul>
-								<li>Billing integrations
-									<ul>
-										<li>Accreditation with mobile network operators.</li>
-										<li>API integration across multiple standards (SOAP, REST, SMPP).</li>
-										<li>Testing new services with mobile network operators and feeding back improvements.</li>
-									</ul>
-								</li>
-								<li>Merchant &amp; Admin dashboard
-									<ul>
-										<li>Billing page template upload tools.</li>
-										<li>Performance metric displays.</li>
-										<li>User management tools.</li>
-										<li>Other in-house tools.</li>
-									</ul>
-								</li>
-								<li>Payment page logic
-									<ul>
-										<li>Routing traffic to appropriate service.</li>
-										<li>Page delivery.</li>
-										<li>Processing payment attempts.</li>
-									</ul>
-								</li>
-								<li>Security &amp; performance
-									<ul>
-										<li>EC2 linux &amp; windows server upgrades.</li>
-										<li>Network security management &amp; VPN configuring.</li>
-										<li>System reliability monitoring &amp; downtime alerts.</li>
-									</ul>
-								</li>
-								<li>Bug hunting and fixes
-									<ul>
-										<li>Liaising with merchants &amp; service providers to resolve issues.</li>
-										<li>Maintaining and improving legacy code.</li>
-									</ul>
-								</li>
-								<li>Design, documentation, &amp; onboarding of junior developers.</li>
-							</ul>
-						</div>
-					</div>
-
-					<hr /><!--  DIVIDER -->
-
-					<div class="row">
-						<div class="col-sm-12">
-							<h2>Learning Advisor</h2>
-							<h3>REED LEARNING/SODEXO | January 2012 - February 2013</h3>
-							<p>Administration of Sodexo’s staff training programs including class and venue booking with learner support.</p>
-							<ul>
-								<li>Advising managers which courses to book.</li>
-								<li>Booking venues and catering.</li>
-								<li>Troubleshooting online learning tool for users.</li>
-								<li>Organising and dispatching certificates to workplaces.</li>
-							</ul>
-						</div>
-					</div>
-
-					<hr /><!--  DIVIDER -->
-
-					<div class="row">
-						<div class="col-sm-12">
-							<h2>Database Administrator</h2>
-							<h3>SERVICE NETWORK | August 2010 - October 2010</h3>
-							<p>Managing contacts database for network management business.</p>
-							<ul>
-								<li>Cleaning up old and duplicate entries in the contacts database.</li>
-								<li>Developing processes for accessing and maintaining the database.</li>
-							</ul>
-						</div>
-					</div>
-
-					<hr /><!--  DIVIDER -->
-
-					<div class="row">
-						<div class="col-sm-12">
-							<h2>Sales Assistant</h2>
-							<h3>MICROANVIKA | September 2007 - February 2008</h3>
-							<p>Making and processing sales for electronics shop.</p>
-							<ul>
-								<li>Advising customers on available products.</li>
-								<li>Processing sales and returns.</li>
-								<li>Stock management.</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<!-- RIGHT COLUMN END -->
-
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12" style="text-align:center">
+				<h1>Gavin Allmond</h1>
+				<h3>Web Developer</h3>
 			</div>
+		</div>
+
+		<div class="row">
+
+			<!-- LEFT COLUMN -->
+			<div class="col-sm-4 leftcolumn">
+
+				<!-- CONTACT -->
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>Contact</h2>
+						<ul class="list-unstyled">
+							<li>gallmond.net <i class="fas fa-fw fa-globe"></i></li>
+							<li>github/gallmond <i class="fas fa-fw fa-code"></i></li>
+							<!-- <li>redacted <i class="fas fa-fw fa-mobile-alt"></i></li> -->
+							<li><span id="contact_button">contact</span> <i class="fas fa-fw fa-envelope"></i></li>
+							<li>London, SW1 <i class="fas fa-fw fa-map-marker-alt"></i></li>
+						</ul>
+					</div>
+				</div>
+
+				<hr /><!--  DIVIDER -->
+
+				<!-- SKILLS -->
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>Technical Skills</h2>
+
+						<h3>Application development</h3>
+						<ul class="list-unstyled">
+							<li>Node.js, PHP, MS JScript, ASP, Python</li>
+							<li>HTML, CSS, JavaScript</li>
+							<li>Laravel, Bootstrap, Express, EJS</li>
+							<li>MongoDB, MySQL, Redis</li>
+							<li>Version control: GIT</li>
+						</ul>
+
+						<h3>Infrastructure</h3>
+						<ul class="list-unstyled">
+							<li>AWS: EC2, Elasticache, S3, VPC</li>
+							<li>Linux: Ubuntu, Redhat, Debian</li>
+							<li>Heroku</li>
+						</ul>
+
+					</div>
+				</div>
+
+				<hr /><!--  DIVIDER -->
+
+				<!-- EDUCATION -->
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>Education</h2>
+
+						<h3>BSc Business Computing</h3>
+						<p>London Metropolitan University 2011</p>
+
+						<h3>FD Degree ICT</h3>
+						<p>Northumbria University 2010</p>
+					</div>
+				</div>
+			</div>
+			<!-- LEFT COLUMN END -->
+
+			<!-- RIGHT COLUMN -->
+			<div class="col-sm-8">
+
+				<!-- BIO -->
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>About</h2>
+						<p>
+							Full stack PHP and Javascript web developer. SQL, Redis, and MongoDB for database and
+							caching. Extensive experience of AWS for in-house infrastructure but have exposure to hosted
+							solutions such as Heroku. Primarily back-end but no stranger to front-end design and
+							implementation.<br>
+							<br>
+							Works in teams and individually to design and implement web applications from inception to
+							deployment with continued support and improvement as business needs change.<br>
+							<br>
+							Particular experience with API intergrations both client and server-side enterprise systems
+							large and small, including building own APIs to expose.<br>
+							<br>
+							Knowledge of frameworks such as Symfony, Laravel, and Express.<br>
+							<br>
+							Some exposure to scripting languages such as Python in addition to bash scripting for server
+							maintenance purposes.<br>
+							<br>
+							Always eager to pick up new skills.
+						</p>
+					</div>
+				</div>
+
+				<hr /><!--  DIVIDER -->
+
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>Web Developer | Senior Web Developer</h2>
+						<h3>IMPULSEPAY | March 2013 - present</h3>
+						<p>Continued development and maintenance of business logic and AWS infrastructure for mobile
+							billing web applications and merchant portals.</p>
+						<ul>
+							<li>Billing integrations
+								<ul>
+									<li>Accreditation with mobile network operators.</li>
+									<li>API integration across multiple standards (SOAP, REST, SMPP).</li>
+									<li>Testing new services with mobile network operators and feeding back
+										improvements.</li>
+								</ul>
+							</li>
+							<li>Merchant &amp; Admin dashboard
+								<ul>
+									<li>Billing page template upload tools.</li>
+									<li>Performance metric displays.</li>
+									<li>User management tools.</li>
+									<li>Other in-house tools.</li>
+								</ul>
+							</li>
+							<li>Payment page logic
+								<ul>
+									<li>Routing traffic to appropriate service.</li>
+									<li>Page delivery.</li>
+									<li>Processing payment attempts.</li>
+								</ul>
+							</li>
+							<li>Security &amp; performance
+								<ul>
+									<li>EC2 linux &amp; windows server upgrades.</li>
+									<li>Network security management &amp; VPN configuring.</li>
+									<li>System reliability monitoring &amp; downtime alerts.</li>
+								</ul>
+							</li>
+							<li>Bug hunting and fixes
+								<ul>
+									<li>Liaising with merchants &amp; service providers to resolve issues.</li>
+									<li>Maintaining and improving legacy code.</li>
+								</ul>
+							</li>
+							<li>Design, documentation, &amp; onboarding of junior developers.</li>
+						</ul>
+					</div>
+				</div>
+
+				<hr /><!--  DIVIDER -->
+
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>Learning Advisor</h2>
+						<h3>REED LEARNING/SODEXO | January 2012 - February 2013</h3>
+						<p>Administration of Sodexo’s staff training programs including class and venue booking with
+							learner support.</p>
+						<ul>
+							<li>Advising managers which courses to book.</li>
+							<li>Booking venues and catering.</li>
+							<li>Troubleshooting online learning tool for users.</li>
+							<li>Organising and dispatching certificates to workplaces.</li>
+						</ul>
+					</div>
+				</div>
+
+				<hr /><!--  DIVIDER -->
+
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>Database Administrator</h2>
+						<h3>SERVICE NETWORK | August 2010 - October 2010</h3>
+						<p>Managing contacts database for network management business.</p>
+						<ul>
+							<li>Cleaning up old and duplicate entries in the contacts database.</li>
+							<li>Developing processes for accessing and maintaining the database.</li>
+						</ul>
+					</div>
+				</div>
+
+				<hr /><!--  DIVIDER -->
+
+				<div class="row">
+					<div class="col-sm-12">
+						<h2>Sales Assistant</h2>
+						<h3>MICROANVIKA | September 2007 - February 2008</h3>
+						<p>Making and processing sales for electronics shop.</p>
+						<ul>
+							<li>Advising customers on available products.</li>
+							<li>Processing sales and returns.</li>
+							<li>Stock management.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- RIGHT COLUMN END -->
 
 		</div>
 
+	</div>
+
 	<!-- jquery (needed by bootstrap) -->
-	<script src="/js/jquery-3.3.1.min.js" ></script>
+	<script src="/js/jquery-3.3.1.min.js"></script>
 	<!-- bootstrap -->
-	<script src="/js/bootstrap.min.js" ></script>
-	</body>
+	<script src="/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+
+		alert('token <%- token %>');
+
+		function emailJS() {
+
+			// show modal
+			let contact_button = document.getElementById('contact_button');
+			contact_button.style.textDecoration = "underline";
+			contact_button.addEventListener('click', (e) => {
+				console.log('clicked')
+				e.preventDefault();
+				e.stopPropagation();
+
+				// bootstrap/jquery
+				$('#email_modal').modal('show');
+			});
+
+			// handle submit
+			let submit_button = document.getElementById('contact_email_send');
+			submit_button.addEventListener('click', (e)=>{
+				e.preventDefault();
+				e.stopPropagation();
+				if(e.target!=e.currentTarget) return;
+				e.currentTarget.disabled = true;
+				e.currentTarget.innerHTML = "Sending...";
+				let from = document.getElementById('contact_email_from').value;
+				let message = document.getElementById('contact_email_message').value;
+				let token = "<%- (typeof token != 'undefined'?token:'') %>";
+				let postJSON = {
+					"from": String(from),
+					"message": String(message),
+					"token": String(token)
+				} 
+				let postString = JSON.stringify(postJSON);
+				var xhttp;
+				xhttp = new XMLHttpRequest();
+				xhttp.ontimeout = function(){
+					submit_button.innerHTML = "Timed out.";
+					setTimeout(()=>{
+						$('#email_modal').modal('hide');
+						document.getElementById('contact_email_from').value = "";
+						document.getElementById('contact_email_message').value = "";
+						let submit_button = document.getElementById('contact_email_send');
+						submit_button.disabled = false;
+						submit_button.innerHTML = "Send";
+					}, 2000);
+				}
+				xhttp.onreadystatechange = function () {
+					let submit_button = document.getElementById('contact_email_send');
+					if (this.readyState == 4 && this.status==200) {
+						if(this.status===200){
+							console.log("success", this);
+							// clear values and hide
+							document.getElementById('contact_email_send').innerHTML = "Sent!";
+							setTimeout(()=>{
+								$('#email_modal').modal('hide');
+								document.getElementById('contact_email_from').value = "";
+								document.getElementById('contact_email_message').value = "";
+								let submit_button = document.getElementById('contact_email_send');
+								submit_button.disabled = false;
+								submit_button.innerHTML = "Send";
+							}, 2000);
+						}else{
+							submit_button.innerHTML = "Failed to send.";
+							console.log("some error", this);
+							setTimeout(()=>{
+								$('#email_modal').modal('hide');
+								document.getElementById('contact_email_from').value = "";
+								document.getElementById('contact_email_message').value = "";
+								let submit_button = document.getElementById('contact_email_send');
+								submit_button.disabled = false;
+								submit_button.innerHTML = "Send";
+							}, 2000);
+						}
+						submit_button.disabled = true;
+						submit_button.innerHTML = "Sending...";
+					}
+				}
+				xhttp.open("POST", "/contact_email_handler", true);
+				xhttp.timeout = 5000;
+				xhttp.withCredentials = true; // this sends cookies now
+				xhttp.setRequestHeader("Content-type", "application/json");
+				console.log('sending email request');
+				xhttp.send(postString);
+				return;
+			})
+
+		}
+
+		function autorun() {
+			console.log('page ready');
+
+			emailJS();
+
+		}
+		if (window.addEventListener) window.addEventListener("load", autorun, false);
+		else if (window.attachEvent) window.attachEvent("onload", autorun);
+		else window.onload = autorun;
+	</script>
+</body>
+
 </html>

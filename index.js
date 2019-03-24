@@ -81,7 +81,7 @@ app.use((req, res, next) => {
 		next();
 	});
 	console.log("\n========== REQUEST ==========");
-	console.log(String(req.method) + " " + String(req.originalUrl));
+	console.log(String(req.method) + " " + String(req.headers.host) + String(req.originalUrl));
 });
 
 // parse body into query if not GET
@@ -184,7 +184,6 @@ app.listen(app.get('port'), function() {
 // local https for testing
 if(process.env.APP_ENVIRONMENT == "local"){
 	var fs = require('fs');
-	var http = require('http');
 	var https = require('https');
 	var privateKey  = fs.readFileSync('ssl/local-key.pem', 'utf8');
 	var certificate = fs.readFileSync('ssl/client-cert.pem', 'utf8');
