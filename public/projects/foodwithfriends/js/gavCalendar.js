@@ -85,7 +85,7 @@ var calendar = function(_containerDiv, _monthOfYear = false){
 
     this.loadMyAvailableDays = (_dayArray)=>{
         this.myLastAvailabilityDays = _dayArray;
-        for(var x = 0, l = this.allDayElements.length; x < l; x++){
+        for(let x = 0, l = this.allDayElements.length; x < l; x++){
             var thisYYYYMMDD = this.allDayElements[x].dataset["yyyymmdd"];
             var dayIndex = _dayArray.indexOf( thisYYYYMMDD );
             if(dayIndex != -1){
@@ -99,7 +99,7 @@ var calendar = function(_containerDiv, _monthOfYear = false){
 
         for(friendName in _friendAvailabilityObject){
 
-            for(var x = 0, l = this.allDayElements.length; x < l; x++){
+            for(let x = 0, l = this.allDayElements.length; x < l; x++){
                 var thisYYYYMMDD = this.allDayElements[x].dataset["yyyymmdd"];
             
                 if( _friendAvailabilityObject[friendName].indexOf( thisYYYYMMDD ) != -1 ){
@@ -182,12 +182,12 @@ var calendar = function(_containerDiv, _monthOfYear = false){
     var dateCounter = 0;
     var dateCounterStarted = false;
     var endOfMonthReached = false;
-    for(var i = 0; i < 6; i++){ // create six rows per month
+    for(let i = 0; i < 6; i++){ // create six rows per month
         if(endOfMonthReached) break; // no work if no more days to add
         var thisRow = document.createElement("tr");
         thisRow.className = "calweek week_"+String(i);
 
-        for(var x = 0; x < 7; x++){ // create seven days per week
+        for(let x = 0; x < 7; x++){ // create seven days per week
             // if dates not yet started, and day reached, start counting
             if( !dateCounterStarted && x===startDay ){
                 dateCounterStarted = true;
