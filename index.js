@@ -177,9 +177,9 @@ app.all('*', function (req, res) {
 
 
 // ==== start listening
-// app.listen(app.get('port'), function() {
-// 	console.log('Node('+process.version+') app is running http on port', app.get('port'));
-// });
+app.listen(app.get('port'), function() {
+	console.log('Node('+process.version+') app is running http on port', app.get('port'));
+});
 
 // local https for testing
 if(process.env.APP_ENVIRONMENT == "local"){
