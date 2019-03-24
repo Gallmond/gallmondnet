@@ -331,6 +331,7 @@
 				var xhttp;
 				xhttp = new XMLHttpRequest();
 				xhttp.ontimeout = function () {
+					let submit_button = document.getElementById('contact_email_send');
 					submit_button.innerHTML = "Timed out.";
 					setTimeout(() => {
 						$('#email_modal').modal('hide');
@@ -347,8 +348,11 @@
 						if (this.status === 200) {
 							console.log("success", this);
 							// clear values and hide
-							document.getElementById('contact_email_send').innerHTML = "Sent!";
+							submit_button.innerHTML = "Sent!";
+							console.log("foo");
+
 							setTimeout(() => {
+								console.log("bar");
 								$('#email_modal').modal('hide');
 								document.getElementById('contact_email_from').value = "";
 								document.getElementById('contact_email_message').value = "";
@@ -368,8 +372,6 @@
 								submit_button.innerHTML = "Send";
 							}, 2000);
 						}
-						submit_button.disabled = true;
-						submit_button.innerHTML = "Sending...";
 					}
 				}
 				xhttp.open("POST", "/contact_email_handler", true);
