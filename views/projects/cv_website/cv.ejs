@@ -63,7 +63,8 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-									<textarea id="contact_email_message" class="form-control" aria-label="With textarea" placeholder="Your message"></textarea>
+									<textarea id="contact_email_message" class="form-control" aria-label="With textarea"
+										placeholder="Your message"></textarea>
 								</div>
 							</div>
 						</div>
@@ -117,13 +118,13 @@
 							<li>HTML, CSS, JavaScript</li>
 							<li>Laravel, Bootstrap, Express, EJS</li>
 							<li>MongoDB, MySQL, Redis</li>
-							<li>Version control: GIT</li>
+							<li>GIT</li>
 						</ul>
 
 						<h3>Infrastructure</h3>
 						<ul class="list-unstyled">
-							<li>AWS: EC2, Elasticache, S3, VPC</li>
-							<li>Linux: Ubuntu, Redhat, Debian</li>
+							<li>AWS: EC2, Elasticache, S3, VPC, VPN</li>
+							<li>Linux & Windows server environments</li>
 							<li>Heroku</li>
 						</ul>
 
@@ -184,6 +185,8 @@
 						<h3>IMPULSEPAY | March 2013 - present</h3>
 						<p>Continued development and maintenance of business logic and AWS infrastructure for mobile
 							billing web applications and merchant portals.</p>
+						<p>PHP (Vanilla 7.1+, Laravel), ASP (MSJScript), MySQL, AWS infrastructure management,
+							Linux/Windows server management, API/Technology R&D for intergations.</p>
 						<ul>
 							<li>Billing integrations
 								<ul>
@@ -300,10 +303,10 @@
 
 			// handle submit
 			let submit_button = document.getElementById('contact_email_send');
-			submit_button.addEventListener('click', (e)=>{
+			submit_button.addEventListener('click', (e) => {
 				e.preventDefault();
 				e.stopPropagation();
-				if(e.target!=e.currentTarget) return;
+				if (e.target != e.currentTarget) return;
 				e.currentTarget.disabled = true;
 				e.currentTarget.innerHTML = "Sending...";
 				let from = document.getElementById('contact_email_from').value;
@@ -313,13 +316,13 @@
 					"from": String(from),
 					"message": String(message),
 					"token": String(token)
-				} 
+				}
 				let postString = JSON.stringify(postJSON);
 				var xhttp;
 				xhttp = new XMLHttpRequest();
-				xhttp.ontimeout = function(){
+				xhttp.ontimeout = function () {
 					submit_button.innerHTML = "Timed out.";
-					setTimeout(()=>{
+					setTimeout(() => {
 						$('#email_modal').modal('hide');
 						document.getElementById('contact_email_from').value = "";
 						document.getElementById('contact_email_message').value = "";
@@ -330,12 +333,12 @@
 				}
 				xhttp.onreadystatechange = function () {
 					let submit_button = document.getElementById('contact_email_send');
-					if (this.readyState == 4 && this.status==200) {
-						if(this.status===200){
+					if (this.readyState == 4 && this.status == 200) {
+						if (this.status === 200) {
 							console.log("success", this);
 							// clear values and hide
 							document.getElementById('contact_email_send').innerHTML = "Sent!";
-							setTimeout(()=>{
+							setTimeout(() => {
 								$('#email_modal').modal('hide');
 								document.getElementById('contact_email_from').value = "";
 								document.getElementById('contact_email_message').value = "";
@@ -343,10 +346,10 @@
 								submit_button.disabled = false;
 								submit_button.innerHTML = "Send";
 							}, 2000);
-						}else{
+						} else {
 							submit_button.innerHTML = "Failed to send.";
 							console.log("some error", this);
-							setTimeout(()=>{
+							setTimeout(() => {
 								$('#email_modal').modal('hide');
 								document.getElementById('contact_email_from').value = "";
 								document.getElementById('contact_email_message').value = "";
