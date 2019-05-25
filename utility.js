@@ -66,21 +66,13 @@ module.exports = class utility {
 				headers: headers
 			};
 			let postDataObject = {
-				"personalizations":[
-					{
-						"to":[]
-					}
-				],
-				"from":{
-					"email": String(_from)
-				},
+				"personalizations":[{"to":[]}],
+				"from":{"email": String(_from)},
 				"subject": String(_subject),
-				"content":[
-					{
-						"type":"text/html",
-						"value": String(_body)
-					}
-				]
+				"content":[{
+					"type":"text/html",
+					"value": String(_body)
+				}]
 			}
 			for(let i=0, l=to.length; i<l; i++){
 				let thisEmail = to[i];
