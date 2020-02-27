@@ -11,6 +11,7 @@
   "dependencies": {
     "@types/mongodb": "^3.1.19",
     "connect-mongodb-session": "^2.0.6",
+    "discord.js": "^11.5.1",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",

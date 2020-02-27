@@ -156,7 +156,6 @@ app.all('/logout', (req,res)=>{
 	}
 });
 
-
 var CV_SITE_CLASS = require("./projects/cv_website");
 var CV_Site = new CV_SITE_CLASS(app);
 
