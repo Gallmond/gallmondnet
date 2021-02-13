@@ -36,7 +36,7 @@ class cv_website_class extends baseProject {
 
 
 				let randomToken = this.crypto.randomBytes(16).toString('hex');
-				req.session.token = randomToken;
+				// req.session.token = randomToken;
 
 				console.log('randomToken', randomToken);
 				res.render(this.project_path + 'cv', {'token':randomToken});
@@ -49,7 +49,7 @@ class cv_website_class extends baseProject {
 			'callback': (req,res)=>{
 
 				// if passed-in token matches session token, send
-				if( typeof req.query.token === "string" && (String(req.session.token) === String(req.query.token)) ){
+				// if( typeof req.query.token === "string" && (String(req.session.token) === String(req.query.token)) ){
 					console.log('Token match, send email')
 
 					let emailHTML = '';
@@ -82,11 +82,11 @@ class cv_website_class extends baseProject {
 						res.status(200).send( resolveObj.messageid );
 					});
 
-				}else{
-					console.log('token mismatch');
-					res.set('Content-Type', 'text/plain');
-					res.status(500).send('token did not match');
-				}
+				// }else{
+				// 	console.log('token mismatch');
+				// 	res.set('Content-Type', 'text/plain');
+				// 	res.status(500).send('token did not match');
+				// }
 
 
 
