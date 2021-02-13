@@ -22,33 +22,33 @@ app.set('port', (process.env.PORT || 3000));
 app.use(express.static(__dirname + '/public'));
 
 // ======= sessions START
-var session;
-if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){ //TODO Add this param to the other ENV files
-	var assert = require('assert');
-	session = require('express-session');
-	MongoDBStore = require('connect-mongodb-session')(session);
-	var store = new MongoDBStore({
-		uri: process.env.GALLMONDNET_MONGODB_URL,
-		collection: 'sessions'
-	});
-	store.on('error', function(error) {
-		assert.ifError(error);
-		assert.ok(false);
-	});
-	var sesssionOptions = {
-		secret: '9LM5HI5T',
-		cookie: {httpOnly:false},
-		store: store,
-		resave: false,
-		saveUninitialized: false,
-		unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
-	}
-	if(process.env.APP_ENVIRONMENT === 'production') {
-		app.set('trust proxy', 1) // trust first proxy
-		sesssionOptions.cookie.secure = false; // serve secure cookies
-	}
-	app.use(session(sesssionOptions));
-}
+// var session;
+// if(process.env.INTERNET_OFF && process.env.INTERNET_OFF!="true"){ //TODO Add this param to the other ENV files
+// 	var assert = require('assert');
+// 	session = require('express-session');
+// 	MongoDBStore = require('connect-mongodb-session')(session);
+// 	var store = new MongoDBStore({
+// 		uri: process.env.GALLMONDNET_MONGODB_URL,
+// 		collection: 'sessions'
+// 	});
+// 	store.on('error', function(error) {
+// 		assert.ifError(error);
+// 		assert.ok(false);
+// 	});
+// 	var sesssionOptions = {
+// 		secret: '9LM5HI5T',
+// 		cookie: {httpOnly:false},
+// 		store: store,
+// 		resave: false,
+// 		saveUninitialized: false,
+// 		unset: "destroy" // 'destroy' deletes from session store. 'keep' leaves in store
+// 	}
+// 	if(process.env.APP_ENVIRONMENT === 'production') {
+// 		app.set('trust proxy', 1) // trust first proxy
+// 		sesssionOptions.cookie.secure = false; // serve secure cookies
+// 	}
+// 	app.use(session(sesssionOptions));
+// }
 // ======= sessions END
 
 // set access control for testing
@@ -144,23 +144,23 @@ app.all('/echo', (req, res)=>{
 });
 
 // session killer. Use a 'redirect' param to send somewhere afterwards
-app.all('/logout', (req,res)=>{
-	if(req.session) req.session = null; // or call req.session.destroy()
-	// try to get redirect
-	if(req.query.redirect){
-		res.redirect( String(req.query.redirect) );
-		res.end();
-	}else{
-		res.set('Content-Type', 'text/plain');
-		res.send("logged out");
-	}
-});
+// app.all('/logout', (req,res)=>{
+// 	if(req.session) req.session = null; // or call req.session.destroy()
+// 	// try to get redirect
+// 	if(req.query.redirect){
+// 		res.redirect( String(req.query.redirect) );
+// 		res.end();
+// 	}else{
+// 		res.set('Content-Type', 'text/plain');
+// 		res.send("logged out");
+// 	}
+// });
 
 var CV_SITE_CLASS = require("./projects/cv_website");
 var CV_Site = new CV_SITE_CLASS(app);
 
-var FoodWithFriendsClass = require("./projects/foodwithfriends");
-var FoodWithFriends = new FoodWithFriendsClass(app);
+// var FoodWithFriendsClass = require("./projects/foodwithfriends");
+// var FoodWithFriends = new FoodWithFriendsClass(app);
 
 
 app.get('/', function (req, res) {
